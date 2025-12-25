@@ -1,5 +1,6 @@
 import NavBar from "./NavBar/NavBar";
 import HeroSection from "./HeroSection/HeroSection";
+
 export default function LandingPage() {
   return (
     <div>
@@ -8,3 +9,4 @@ export default function LandingPage() {
     </div>
   );
 }
+

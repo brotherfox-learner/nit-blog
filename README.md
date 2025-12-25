@@ -25,6 +25,8 @@ This project is created for writing, organizing, and presenting blog content wit
 - **Tailwind CSS**
 - **shadcn/ui**
 - **lucide-react**
+- **React Router**
+
 ---
 
 ## 📁 Project Structure
@@ -33,7 +35,16 @@ This project is created for writing, organizing, and presenting blog content wit
 src/
 ├─ landing-page/       # Landing page components
 │  ├─ NavBar/         # Navigation bar components
+│  │  ├─ NavBar.jsx
+│  │  ├─ Logo.jsx
+│  │  ├─ HamburgerBar.jsx
+│  │  ├─ LogInBtn.jsx
+│  │  └─ SignUpBtn.jsx
 │  ├─ HeroSection/    # Hero section components
+│  │  ├─ HeroSection.jsx
+│  │  ├─ AuthorTitle.jsx
+│  │  ├─ AuthorPic.jsx
+│  │  └─ AuthorDesciption.jsx
 │  └─ LandingPage.jsx # Main landing page
 ├─ components/
 │  ├─ ui/             # shadcn/ui components (Button, dropdown-menu, etc.)
