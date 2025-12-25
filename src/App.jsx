@@ -1,7 +1,7 @@
 import './App.css'
 import LandingPage from './landing-page/LandingPage'
-function App() {
 
+function App() {
   return (
     <>
       <LandingPage />
@@ -10,3 +10,4 @@ function App() {
 }
 
 export default App
+

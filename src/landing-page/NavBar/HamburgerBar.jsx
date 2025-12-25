@@ -1,4 +1,4 @@
-export default function HambergurBar() {
+export default function HamburgerBar() {
     return (
       <button className="block cursor-pointer max-[375px]:block min-[376px]:hidden" aria-label="Menu">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
