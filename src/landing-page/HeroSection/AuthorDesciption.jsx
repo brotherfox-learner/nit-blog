@@ -11,16 +11,18 @@ export default function AuthorDesciption() {
           </div>
         </div>
         <div className="font-poppins font-medium text-[16px] leading-[24px] text-[#75716B]">
-          I am a pet enthusiast and freelance writer who specializes in animal
-          behavior and care. With a deep love for cats, I enjoy sharing insights
-          on feline companionship and wellness.
+          I am a pet enthusiast and freelance writer <br />
+          who specializes in animal behavior and <br />
+          care. With a deep love for cats, I enjoy <br />
+          sharing insights on feline companionship <br />
+          and wellness.
           <br />
           <br />
-          When i'm not writing, I spends time volunteering at my local animal
-          shelter, helping cats find loving homes.
+          When i'm not writing, I spends time 
+          volunteering at my local animal shelter, <br /> 
+          helping cats find loving homes.
         </div>
       </div>
     </section>
   );
 }
-
