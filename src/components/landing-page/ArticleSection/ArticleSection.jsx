@@ -25,7 +25,7 @@ export default function ArticleSection() {
             Category
           </Label>
           <SelectBar
-            className='text-[#75716B]'
+            className="text-[#75716B]"
             placeholder="Highlight"
             id="category"
             items={categories}
@@ -37,8 +37,8 @@ export default function ArticleSection() {
           {categories.map((category) => (
             <Button
               key={category}
-              variant="outline"
-              className="font-poppins font-medium text-[16px] leading-[24px] text-[#75716B] bg-transparent border-transparent hover:bg-[#DAD6D1] hover:text-[#43403B] rounded-[8px] h-[48px] px-4 transition-all duration-300 ease-in-out"
+              variant="ghost"
+              className="font-poppins font-medium text-[16px] leading-[24px] text-[#75716B] bg-transparent border-0 hover:bg-[#DAD6D1] hover:text-[#43403B] rounded-[8px] h-[48px] px-4 transition-all duration-300 ease-in-out"
             >
               {category}
             </Button>
