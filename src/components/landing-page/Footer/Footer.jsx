@@ -2,11 +2,15 @@ import { SocialIcon } from "@/components/common";
 
 export default function Footer() {
   return (
-    <footer className="font-medium flex flex-col items-center justify-center mt-[48px] py-[40px] bg-[#EFEEEB] min-[1440px]:flex-row min-[1440px]:justify-between min-[1440px]:items-center min-[1440px]:px-[120px] min-[1440px]:py-[60px]">
+    <footer className="font-medium flex flex-col items-center justify-between gap-[24px] mt-[48px] py-[40px] bg-[#EFEEEB] min-[1280px]:flex-row min-[1280px]:justify-between min-[1280px]:items-center min-[1280px]:px-[120px] min-[1280px]:py-[60px]">
       <div className="flex items-center gap-6">
-        <div className="font-medium text-[#43403B] cursor-pointer transition-colors duration-300 hover:text-[#26231E]">
+        <a
+          href="#"
+          className="font-medium text-[#43403B] cursor-pointer transition-all duration-300 hover:text-[#26231E] hover:scale-105 active:scale-95 relative group"
+        >
           Get in touch
-        </div>
+          <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#26231E] transition-all duration-300 group-hover:w-full"></span>
+        </a>
         <div className="flex items-center gap-[16px]">
           <a
             href="#"
@@ -45,7 +49,7 @@ export default function Footer() {
       </div>
       <a
         href="#"
-        className="font-medium text-center max-[375px]:mt-6 mt-0 underline cursor-pointer transition-colors duration-300 hover:text-[#26231E]"
+        className="font-medium text-center max-[375px]:mt-6 mt-0 underline cursor-pointer transition-all duration-300 hover:text-[#26231E] hover:scale-105 active:scale-95 relative group decoration-[#43403B] hover:decoration-[#26231E]"
       >
         Home page
       </a>
