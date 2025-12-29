@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils"
 export function SelectBar({placeholder, items, label, className}) {
   return (
     <Select>
-      <SelectTrigger className={cn("w-full bg-white data-placeholder:font-poppins data-placeholder:font-medium data-placeholder:text-[16px] data-placeholder:leading-[24px] data-placeholder:text-[#75716B]", className)}>
+      <SelectTrigger className={cn("w-full bg-white data-placeholder:font-medium data-placeholder:text-[16px] data-placeholder:leading-[24px] data-placeholder:text-[#75716B]", className)}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
