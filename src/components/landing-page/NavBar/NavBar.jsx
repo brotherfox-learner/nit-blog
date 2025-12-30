@@ -1,7 +1,6 @@
-import SignUpBtn from "./SignUpBtn";
-import LogInBtn from "./LogInBtn";
 import Hamburger from "./HamburgerBar";
 import Logo from "./Logo";
+import { SignUpButton, LogInButton } from "@/components/common/Button";
 
 export default function NavBar() {
   return (
@@ -9,10 +8,9 @@ export default function NavBar() {
       <Logo />
       <Hamburger />
       <div className="flex gap-[8px] max-md:hidden">
-        <SignUpBtn />
-        <LogInBtn />
+        <SignUpButton>Sign Up</SignUpButton>    
+        <LogInButton>Log In</LogInButton>
       </div>
     </nav>
   );
 }
-

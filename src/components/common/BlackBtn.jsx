@@ -1,9 +1,10 @@
-import { Button } from "../ui/Button";
+/**
+ * BlackBtn - Now uses the reusable AuthButton
+ * Following DRY - delegates to shared component
+ */
 
-export default function BlackBtn({BtnName = "Sign Up"}) {
-  return (
-    <Button className="rounded-full border border-[#75716B] bg-[#26231E] text-[16px] font-medium text-white">
-      {BtnName}
-    </Button>
-  );
+import { SignUpButton } from "./Button";
+
+export default function BlackBtn({ BtnName = "Sign Up" }) {
+  return <SignUpButton>{BtnName}</SignUpButton>;
 }
