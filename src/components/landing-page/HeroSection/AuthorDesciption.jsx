@@ -1,7 +1,7 @@
 export default function AuthorDesciption() {
   return (
-    <section className="min-[1440px]:mt-0">
-      <div className="flex flex-col w-[343px] max-w-full h-[284px] gap-[12px] min-[1440px]:w-[347px]">
+    <section className="min-[1280px]:mt-0">
+      <div className="flex flex-col w-[343px] max-w-full h-[284px] gap-[12px] min-[1280px]:w-[347px]">
         <div className="flex flex-col gap-[4px]">
           <div className="font-medium text-[12px] leading-[20px] text-[#75716B]">
             -Author
