@@ -29,7 +29,8 @@ export default function Footer() {
             />
           </a>
           <a
-            href="#"
+            href="https://github.com/brotherfox-learner/nit-blog"
+            target="_blank"
             className="w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 hover:bg-[#DAD6D1] hover:scale-110 active:scale-95"
             aria-label="GitHub"
           >

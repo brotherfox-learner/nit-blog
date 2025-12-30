@@ -1,5 +1,3 @@
-import * as React from "react"
-
 import {
   Select,
   SelectContent,
@@ -11,10 +9,10 @@ import {
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 
-export function SelectBar({placeholder, items, label, className}) {
+export function SelectBar({placeholder, items, label, className, value, onValueChange}) {
   return (
-    <Select>
-      <SelectTrigger className={cn("w-full bg-white data-placeholder:font-medium data-placeholder:text-[16px] data-placeholder:leading-[24px] data-placeholder:text-[#75716B]", className)}>
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className={cn("w-full bg-white data-placeholder:font-medium font-poppins data-placeholder:text-[14px] data-placeholder:leading-[24px] data-placeholder:text-[#75716B]", className)}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
