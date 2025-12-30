@@ -5,6 +5,6 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-export function randomViewCount() {
-  return Math.floor(Math.random() * 1000) + 1;
+export function randomNumber(max = 1000) {
+  return Math.floor(Math.random() * max) + 1;
 }

@@ -2,7 +2,7 @@ import { SearchBox } from "../../common/SearchBox";
 import { SelectBar } from "../../common/SelectBar";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/Button";
-import { ArrowBigRight } from "lucide-react";
+
 export default function ArticleSection() {
   const categories = ["Highlight", "Cat", "Inspiration", "General"];
 

@@ -24,7 +24,7 @@ export function BlogList() {
       />
       {/* <BlogCard2 /> */}
       <BlogCard2 image='https://cataas.com/cat/love' />
-      <BlogCard2 />
+      <BlogCard2 image="https://cataas.com/cat/funny"/>
     </div>
   );
 }
