@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/Button";
 
 // Category data - could be moved to constants or fetched from API
-const CATEGORIES = ["Highlight", "Cat", "Inspiration", "General"];
+const CATEGORIES = ["Working", "Lifestyle", "Tech", "Travel","Education","Nature"];
 
 export default function ArticleSection() {
   return (
