@@ -1,9 +1,3 @@
-/**
- * Reusable Action Button Component
- * Following DRY - single component for like, share, more actions
- * Loose Coupling - behavior configured via props
- */
-
 import { cn } from "@/lib/utils";
 import { HeartIcon, ShareIcon, MoreIcon, BookmarkIcon } from "./icons";
 

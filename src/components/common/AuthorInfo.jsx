@@ -1,9 +1,3 @@
-/**
- * Reusable Author Info Component
- * Following High Cohesion - author-related UI in one component
- * DRY - used across all blog cards
- */
-
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "./icons";
 

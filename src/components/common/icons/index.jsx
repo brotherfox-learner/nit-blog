@@ -1,9 +1,3 @@
-/**
- * Reusable Icon Components
- * Following DRY principle - define SVGs once, use everywhere
- * High Cohesion - all icons in one place
- */
-
 // Base icon wrapper for consistent sizing and styling
 export function Icon({ children, className = "w-4 h-4", ...props }) {
   return (

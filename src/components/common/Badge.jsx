@@ -1,9 +1,3 @@
-/**
- * Reusable Badge Component
- * Following Abstraction - single component for all badge variations
- * Loose Coupling - configurable via props, not hardcoded styles
- */
-
 import { cn } from "@/lib/utils";
 
 const BADGE_VARIANTS = {

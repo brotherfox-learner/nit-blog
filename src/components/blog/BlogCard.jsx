@@ -1,60 +1,127 @@
+import { cn } from "@/lib/utils";
+import authorPic from "@/assets/images/Author-main-pic.jpg";
+
+// Reusable components
+import {
+  CategoryBadge,
+  ReadTimeBadge,
+  AuthorInfo,
+  ActionButtonGroup,
+  ShimmerEffect,
+  GradientOverlay,
+  AmbientGlow,
+  AccentLine,
+  Divider,
+} from "@/components/common";
+
+// Default values - could be moved to constants
+import { BLOG_DEFAULTS } from "@/constants/design";
+
 export function BlogCard({
-  image = "https://cataas.com/cat",
-  category = "Cat",
-  title = "Understanding Cat Behavior: Why Your Feline Friend Acts the Way They Do",
-  description = "Dive into the curious world of cat behavior, exploring why cats knead, purr, and chase imaginary prey. This article helps pet owners decode their feline's actions and understand how their instincts as hunters shape their daily routines.",
-  author = "Thompson P.",
-  date = "11 September 2024",
+  image = BLOG_DEFAULTS.image,
+  category = BLOG_DEFAULTS.category,
+  title = BLOG_DEFAULTS.title,
+  description = BLOG_DEFAULTS.description,
+  author = BLOG_DEFAULTS.author,
+  date = BLOG_DEFAULTS.date,
+  src = authorPic,
+  loading = BLOG_DEFAULTS.loading,
+  readTime = BLOG_DEFAULTS.readTime,
+  className = "",
 }) {
   return (
-    <article className="flex flex-col justify-center gap-[16px] w-[375px] transition-all duration-300 hover:shadow-xl hover:bg-[#F5F5F5] rounded-md p-2 cursor-pointer group min-[1280px]:w-[42vw] min-[1280px]:h-[582px] px-[20px] py-[10px]">
-      {/* Image */}
+    <article
+      className={cn(
+        // Layout
+        "relative flex flex-col justify-between items-center",
+        "w-[375px] h-[60vh] min-h-[400px]",
+        "min-[1280px]:w-[39vw] min-[1280px]:h-[600px]",
+        // Spacing
+        "mt-[5px] gap-[16px] p-[20px] pb-[10px]",
+        // Appearance
+        "bg-white rounded-3xl overflow-hidden",
+        "border border-gray-100 hover:border-white-200",
+        // Effects
+        "shadow-[0_4px_20px_rgba(0,0,0,0.08)]",
+        "hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)]",
+        "hover:-translate-y-3",
+        // Animation
+        "transition-all duration-700 ease-out",
+        "cursor-pointer group",
+        className=""
+      )}
+    >
+      {/*สีภายใน Card: Ambient Glow Effect */}
+      <AmbientGlow color="white" />
+
+      {/* Nav link ไปยัง Blog Post : Image Container */}
       <a
         href="#"
-        className="w-[343px] min-[1024px]:w-full h-[62%] object-cover rounded-md overflow-hidden block"
+        className="relative w-[343px] min-[1024px]:w-full h-[64%] overflow-hidden rounded-2xl block group/image"
       >
+        {/* รูปภาพหลักภายใน Card: Main Image */}
         <img
-          className="w-full h-full object-cover rounded-md transition-transform duration-300 group-hover:scale-105"
+          className="w-[343px] min-[1024px]:w-full h-full object-cover rounded-2xl transition-all duration-1000 ease-out group-hover:scale-105 object-[50%_25%]"
           src={image}
           alt={title}
+          loading={loading}
         />
-      </a>
-      {/* Content */}
-      <div className="flex flex-col box-border">
-        <div className="flex">
-          {/* Label Category */}
-          <span className="bg-[#D7F2E9] w-[50px] h-[30px] rounded-full px-[12px] py-[4px] text-sm font-medium text-[#12B279] mb-2 transition-colors duration-300 group-hover:bg-[#C4E8D8]">
-            {category}
-          </span>
+
+        {/* Hover Effects */}
+        <GradientOverlay />
+        <ShimmerEffect />
+
+        {/* ป้ายเวลาประมาณในการอ่าน Blog: Reading Time Badge - Top Left (show on hover) */}
+        <div className="absolute top-2 left-2">
+          <ReadTimeBadge minutes={readTime} showOnHover={true} />
         </div>
-        {/* Title */}
-        <a href="#" className="transition-colors duration-300">
-          <h2 className="text-start font-bold text-xl mb-2 overflow-hidden transition-all duration-300 group-hover:text-[#26231E]">
+
+        {/* ป้ายหมวดหมู่ของ Blog: Category Badge - Top Right */}
+        <div className="absolute top-4 right-2">
+          <CategoryBadge category={category} />
+        </div>
+      </a>
+
+      {/* ส่วนเนื้อหาของ Blog: Content Container */}
+      <section className="flex flex-col box-border gap-3 relative w-full">
+        {/* หัวข้อของ Blog: Title */}
+        <a href="#" className="group/title">
+          <h2 className="text-start font-bold text-xl leading-tight overflow-hidden line-clamp-2 text-gray-900 transition-colors duration-300 group-hover/title:text-emerald-600">
             {title}
           </h2>
         </a>
-        {/* Description */}
-        <p className="text-muted-foreground text-sm line-clamp-2 h-[44px] transition-colors duration-300 group-hover:text-[#43403B]">
+
+        {/* เนื้อหาย่อของ Blog: Description */}
+        <p className="text-[#75716B] text-sm leading-relaxed line-clamp-2 h-[44px] transition-all duration-500 group-hover:text-[#43403B]">
           {description}
         </p>
-      </div>
-      <div className="flex items-center text-[14px] leading-[22px]">
-        {/* Author Image */}
-        <img
-          className="w-[24px] h-[24px] rounded-full mr-2 transition-transform duration-300 group-hover:scale-110"
-          src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg"
-          alt={author}
+      </section>
+
+      {/* ส่วนผู้เขียน & วันที่ของ Blog: Author & Date Section */}
+      <footer className="relative flex items-center justify-between text-xs w-full">
+        {/* Divider - Positioned above author section */}
+        <Divider className="absolute -top-2 left-0 right-0" />
+
+        {/* ข้อมูลผู้เขียนของ Blog: Author Info */}
+        <AuthorInfo
+          author={author}
+          date={date}
+          imageSrc={src}
+          size="sm"
+          showVerified={true}
+          layout="inline"
         />
-        {/* Author */}
-        <span className="font-medium text-[#43403B] transition-colors duration-300 group-hover:text-[#26231E]">
-          {author}
-        </span>
-        {/* Date */}
-        <span className="mx-2 text-[#DAD6D1]">|</span>
-        <span className="font-sm text-[#75716B] transition-colors duration-300 group-hover:text-[#43403B]">
-          {date}
-        </span>
-      </div>
+
+        {/* ปุ่มการดำเนินการของ Blog: Action Buttons */}
+        <ActionButtonGroup
+          actions={["like", "share", "more"]}
+          size="md"
+          showOnHover={true}
+        />
+      </footer>
+
+      {/* Bottom Accent Line */}
+      <AccentLine color="emerald" />
     </article>
   );
 }
