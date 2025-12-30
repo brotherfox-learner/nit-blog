@@ -19,11 +19,11 @@ export function BlogCard2({
       {/* Image Container */}
       <a
         href="#"
-        className="relative w-[343px] min-[1024px]:w-full h-[68%] overflow-hidden rounded-2xl block group/image"
+        className="relative w-[343px] min-[1024px]:w-full h-[64%] overflow-hidden rounded-2xl block group/image"
       >
         {/* Main Image */}
         <img
-          className="w-[343px] min-[1024px]:w-full h-full min-[1024px]:h-full object-cover rounded-2xl transition-all duration-1000 ease-out group-hover:scale-105 object-[50%_25%]"
+          className="w-[343px] min-[1024px]:w-full h-full min-[1024px]:h-[full] object-cover rounded-2xl transition-all duration-1000 ease-out group-hover:scale-105 object-[50%_25%]"
           src={image}
           alt={title}
           loading="lazy"
@@ -79,11 +79,11 @@ export function BlogCard2({
       {/* Author & Date Section */}
       <div className="relative flex items-center justify-between text-xs w-full">
         {/* Divider - Positioned above author section */}
-        <div className="absolute -top-2 left-0 right-0 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent" />
+        <div className="absolute -top-2 left-0 right-0 h-px bg-linear-to-r from-gray-100 via-gray-50 to-gray-100" />
         {/* Author Info */}
         <div className="flex items-center gap-2">
           {/* Author Image */}
-          <div className="relative">
+          <div className="relative hover:scale-130 transition-transform duration-300">
             <img
               className="w-6 h-6 min-[1280px]:w-7 min-[1280px]:h-7 rounded-full object-cover ring-1 ring-gray-200 shadow-sm"
               src={src}
@@ -107,7 +107,7 @@ export function BlogCard2({
 
           {/* Author & Date Text - Same Line */}
           <div className="flex items-center gap-1.5">
-            <span className="font-medium text-gray-900 text-[11px] min-[1280px]:text-xs">
+            <span className="font-medium text-gray-900 text-[11px] min-[1280px]:text-xs hover:text-emerald-600 transition-colors duration-300">
               {author}
             </span>
             <span className="text-gray-300 text-[10px]">|</span>
