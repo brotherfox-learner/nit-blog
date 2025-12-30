@@ -12,7 +12,7 @@ export function BlogCard2({
   src = authorPic,
 }) {
   return (
-    <article className="relative flex flex-col justify-between mt-[5px] gap-[16px] w-[375px] h-[60vh] bg-white rounded-3xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)] transition-all duration-700 ease-out cursor-pointer group border border-gray-100 hover:border-white-200 hover:-translate-y-3 min-[1280px]:w-[39vw] min-[1280px]:h-[600px] p-[20px] pb-[10px]">
+    <article className="relative flex flex-col justify-between items-center mt-[5px] gap-[16px] w-[375px] h-[60vh] min-h-[400px] bg-white rounded-3xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)] transition-all duration-700 ease-out cursor-pointer group border border-gray-100 hover:border-white-200 hover:-translate-y-3 min-[1280px]:w-[39vw] min-[1280px]:h-[600px] p-[20px] pb-[10px]">
       {/* Ambient Glow Effect - appears on hover */}
       <div className="absolute -inset-1 bg-linear-to-r from-white-500/20 via-white-300/10 to-white-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10" />
 
@@ -53,7 +53,7 @@ export function BlogCard2({
         </div>
 
         {/* Category Badge - Top Right */}
-        <span className="absolute top-4 right-4 bg-white/95 backdrop-blur-xl px-5 py-2.5 rounded-full text-[13px] font-semibold tracking-wide text-emerald-600 shadow-[0_4px_15px_rgba(0,0,0,0.1)] transition-all duration-500 group-hover:bg-emerald-500 group-hover:text-white group-hover:scale-105 group-hover:shadow-[0_8px_25px_rgba(16,185,129,0.4)] border border-emerald-100">
+        <span className="absolute top-4 right-4 bg-white/95 backdrop-blur-xl px-5 py-2.5 rounded-full text-[13px] font-semibold tracking-wide text-emerald-600 shadow-[0_4px_15px_rgba(0,0,0,0.1)] transition-all duration-500 hover:bg-emerald-500 hover:text-white group-hover:scale-105 group-hover:shadow-[0_8px_25px_rgba(16,185,129,0.4)] border border-emerald-100">
           {category}
         </span>
       </a>
@@ -77,9 +77,9 @@ export function BlogCard2({
       </div>
 
       {/* Author & Date Section */}
-      <div className="relative flex items-center justify-between text-xs">
+      <div className="relative flex items-center justify-between text-xs w-full">
         {/* Divider - Positioned above author section */}
-        <div className="absolute -top-1 left-0 right-0 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent" />
+        <div className="absolute -top-2 left-0 right-0 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent" />
         {/* Author Info */}
         <div className="flex items-center gap-2">
           {/* Author Image */}
