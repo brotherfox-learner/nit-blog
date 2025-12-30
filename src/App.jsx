@@ -1,12 +1,10 @@
 import "./App.css";
 import { NavBar, Footer } from "./components/layout";
 import LandingPage from "./components/landing-page/LandingPage";
-import { ActionButtonGroup } from "./components/common";
 
 function App() {
   return (
     <>
-      {/* <h1><ActionButton variant="like" size="md" /></h1> */}
       <NavBar />
       <LandingPage />
       <Footer />

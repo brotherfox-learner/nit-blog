@@ -27,6 +27,7 @@ export function BlogCard({
   src = authorPic,
   loading = BLOG_DEFAULTS.loading,
   readTime = BLOG_DEFAULTS.readTime,
+  objectPosition = BLOG_DEFAULTS.objectPosition,
   className = "",
 }) {
   return (
@@ -48,11 +49,11 @@ export function BlogCard({
         // Animation
         "transition-all duration-700 ease-out",
         "cursor-pointer group",
-        className=""
+        (className = "")
       )}
     >
       {/*สีภายใน Card: Ambient Glow Effect */}
-      <AmbientGlow color="white" />
+      <AmbientGlow color="green" />
 
       {/* Nav link ไปยัง Blog Post : Image Container */}
       <a
@@ -61,7 +62,10 @@ export function BlogCard({
       >
         {/* รูปภาพหลักภายใน Card: Main Image */}
         <img
-          className="w-[343px] min-[1024px]:w-full h-full object-cover rounded-2xl transition-all duration-1000 ease-out group-hover:scale-105 object-[50%_25%]"
+          className={cn(
+            "w-[343px] min-[1024px]:w-full h-full object-cover rounded-2xl transition-all duration-1000 ease-out group-hover:scale-105",
+            `object-[50%_${objectPosition}]`
+          )}
           src={image}
           alt={title}
           loading={loading}
@@ -121,7 +125,7 @@ export function BlogCard({
       </footer>
 
       {/* Bottom Accent Line */}
-      <AccentLine color="emerald" />
+      <AccentLine color="green" />
     </article>
   );
 }

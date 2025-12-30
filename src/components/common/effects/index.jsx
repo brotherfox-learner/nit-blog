@@ -42,8 +42,12 @@ export function GradientOverlay({
 export function AmbientGlow({ color = "white", className = "" }) {
   const colorClasses = {
     white: "from-white/20 via-white/10 to-white/20",
+    red: "from-red-500/20 via-red-300/10 to-red-500/20",
     emerald: "from-emerald-500/20 via-emerald-300/10 to-emerald-500/20",
     gold: "from-[#C9A961]/20 via-[#1a1a1a]/10 to-[#C9A961]/20",
+    blue: "from-[#023047]/20 via-[#023047]/10 to-[#023047]/20",
+    skyblue: "from-[#9bf6ff]/10 via-[#9bf6ff]/5 to-[#9bf6ff]/10",
+    green: "from-emerald-200/10 via-emerald-200/5 to-emerald-200/10",
   };
 
   return (
@@ -64,6 +68,8 @@ export function AccentLine({ color = "emerald", className = "" }) {
     emerald: "from-emerald-400 via-emerald-600 to-emerald-400",
     gold: "from-[#C9A961] via-[#1a1a1a] to-[#C9A961]",
     gray: "from-gray-300 via-gray-500 to-gray-300",
+    blue: "from-[#0e0e52]/1 via-[#0e0e52] to-[#0e0e52]/1",
+    green: "from-emerald-200/1 via-[#004b23]/70 to-emerald-200/1",
   };
 
   return (

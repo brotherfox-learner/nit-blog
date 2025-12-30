@@ -112,6 +112,7 @@ export const STYLES = {
 // Default blog post values
 export const BLOG_DEFAULTS = {
   image: 'https://cataas.com/cat',
+  objectPosition: 20,
   category: 'Cat',
   title: 'Understanding Cat Behavior: Why Your Feline Friend Acts the Way They Do',
   description: 'Dive into the curious world of cat behavior, exploring why cats knead, purr, and chase imaginary prey.',
