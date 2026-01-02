@@ -14,8 +14,8 @@ export default function NavBar() {
       <Logo />
       <Hamburger />
       <div className="flex gap-[8px] max-[768px]:hidden">
-        <SignUpBtn />
         <LogInBtn />
+        <SignUpBtn />
       </div>
     </nav>
   );

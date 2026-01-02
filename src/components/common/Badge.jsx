@@ -19,6 +19,61 @@ const BADGE_VARIANTS = {
   },
 };
 
+// Category-specific color mappings
+const CATEGORY_COLORS = {
+  Working: {
+    text: "text-amber-600",
+    border: "border-amber-200",
+    bg: "bg-amber-50/95",
+    hoverBg: "hover:bg-amber-500",
+    shadow: "group-hover:shadow-[0_8px_25px_rgba(245,158,11,0.4)]",
+  },
+  Lifestyle: {
+    text: "text-pink-600",
+    border: "border-pink-200",
+    bg: "bg-pink-50/95",
+    hoverBg: "hover:bg-pink-500",
+    shadow: "group-hover:shadow-[0_8px_25px_rgba(236,72,153,0.4)]",
+  },
+  Tech: {
+    text: "text-blue-600",
+    border: "border-blue-200",
+    bg: "bg-blue-50/95",
+    hoverBg: "hover:bg-blue-500",
+    shadow: "group-hover:shadow-[0_8px_25px_rgba(59,130,246,0.4)]",
+  },
+  Travel: {
+    text: "text-cyan-600",
+    border: "border-cyan-200",
+    bg: "bg-cyan-50/95",
+    hoverBg: "hover:bg-cyan-500",
+    shadow: "group-hover:shadow-[0_8px_25px_rgba(6,182,212,0.4)]",
+  },
+  Education: {
+    text: "text-violet-600",
+    border: "border-violet-200",
+    bg: "bg-violet-50/95",
+    hoverBg: "hover:bg-violet-500",
+    shadow: "group-hover:shadow-[0_8px_25px_rgba(139,92,246,0.4)]",
+  },
+  Nature: {
+    text: "text-emerald-600",
+    border: "border-emerald-200",
+    bg: "bg-emerald-50/95",
+    hoverBg: "hover:bg-emerald-500",
+    shadow: "group-hover:shadow-[0_8px_25px_rgba(16,185,129,0.4)]",
+  },
+};
+
+// Default fallback colors
+const DEFAULT_CATEGORY_COLOR = {
+  text: "text-gray-600",
+  border: "border-gray-200",
+  bg: "bg-gray-50/95",
+  hoverBg: "hover:bg-gray-500",
+  shadow: "group-hover:shadow-[0_8px_25px_rgba(107,114,128,0.4)]",
+};
+
 const BADGE_SIZES = {
   sm: "px-3 py-1 text-xs",
   md: "px-4 py-2 text-sm",
@@ -53,17 +108,34 @@ export function Badge({
   );
 }
 
-// Specialized category badge with tracking
+// Specialized category badge with unique colors per category
 export function CategoryBadge({ category, className = "", ...props }) {
+  const colors = CATEGORY_COLORS[category] || DEFAULT_CATEGORY_COLOR;
+
   return (
-    <Badge
-      variant="category"
-      size="lg"
-      className={cn("tracking-wide shadow-[0_4px_15px_rgba(0,0,0,0.1)] group-hover:shadow-[0_8px_25px_rgba(16,185,129,0.4)]", className)}
+    <span
+      className={cn(
+        // Base styles
+        "rounded-full font-semibold shadow-lg transition-all duration-300",
+        "px-5 py-2.5 text-[13px] tracking-wide",
+        "backdrop-blur-xl",
+        "shadow-[0_4px_15px_rgba(0,0,0,0.1)]",
+        // Category-specific colors
+        colors.bg,
+        colors.text,
+        colors.border,
+        "border",
+        // Hover effects
+        colors.hoverBg,
+        "hover:text-white",
+        "group-hover:scale-105",
+        colors.shadow,
+        className
+      )}
       {...props}
     >
       {category}
-    </Badge>
+    </span>
   );
 }
 

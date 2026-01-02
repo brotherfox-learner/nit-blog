@@ -18,23 +18,23 @@ export default function HamburgerBar() {
       {/* Hamburger Button */}
       <button
         onClick={toggleMenu}
-        className="flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-[#EFEEEB] active:scale-95 p-2 rounded-lg"
+        className="flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-[#EFEEEB] active:scale-95 p-[8px] rounded-lg"
         aria-label="Toggle menu"
         aria-expanded={isOpen}
       >
         <div className="relative w-3 h-4 flex flex-col justify-between">
           <span
-            className={`w-6 h-0.5 bg-[#26231E] rounded-full transition-all duration-300 origin-center ${
+            className={`w-6 h-[2px] bg-[#26231E] rounded-full transition-all duration-300 origin-center ${
               isOpen ? "rotate-45 translate-y-2" : ""
             }`}
           />
           <span
-            className={`w-6 h-0.5 bg-[#26231E] rounded-full transition-all duration-300 ${
+            className={`w-6 h-[2px] bg-[#26231E] rounded-full transition-all duration-300 ${
               isOpen ? "opacity-0 scale-0" : "opacity-100 scale-100"
             }`}
           />
           <span
-            className={`w-6 h-0.5 bg-[#26231E] rounded-full transition-all duration-300 origin-center ${
+            className={`w-6 h-[2px] bg-[#26231E] rounded-full transition-all duration-300 origin-center ${
               isOpen ? "-rotate-45 -translate-y-2" : ""
             }`}
           />
@@ -71,12 +71,13 @@ export default function HamburgerBar() {
         {/* Menu Content */}
         <div className="flex flex-col gap-3 p-5">
           {/* Auth Buttons */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-5">
+            <LogInBtn className="w-full justify-center h-11" />
+
             <SignUpBtn
               BtnName="Sign Up"
               className="w-full justify-center h-11"
             />
-            <LogInBtn className="w-full justify-center h-11" />
           </div>
 
           {/* Divider */}
@@ -84,6 +85,7 @@ export default function HamburgerBar() {
 
           {/* Quick Links */}
           <div className="flex flex-col gap-1">
+            {/* Home Link */}
             <a
               href="#"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
@@ -104,6 +106,7 @@ export default function HamburgerBar() {
               </svg>
               <span className="font-medium text-sm">Home</span>
             </a>
+            {/* Articles Link */}
             <a
               href="#"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
@@ -124,6 +127,7 @@ export default function HamburgerBar() {
               </svg>
               <span className="font-medium text-sm">Articles</span>
             </a>
+            {/* About Link */}
             <a
               href="#"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"

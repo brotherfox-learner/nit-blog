@@ -1,25 +1,31 @@
 import { useState, useEffect } from "react";
 import { BlogCard } from "./BlogCard";
+import { Spinner } from "../common/Spinner";
 
 const POSTS_PER_PAGE = 4;
 
 export function BlogList({ posts }) {
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Reset visibleCount when posts change (e.g., when searching/filtering)
+  // รีเซ็ต visibleCount เมื่อ posts เปลี่ยน (เช่น เมื่อค้นหา/กรอง)
   useEffect(() => {
     setVisibleCount(POSTS_PER_PAGE);
   }, [posts]);
 
-  // Get only the posts that should be visible
+  // ดึงบทความที่จะแสดงผล
   const visiblePosts = posts.slice(0, visibleCount);
 
-  // Check if there are more posts to load
+  // ตรวจสอบว่ามีบทความที่จะโหลดเพิ่มเติมหรือไม่
   const hasMorePosts = visibleCount < posts.length;
 
-  // Handle load more button click
+  // ฟังก์ชัน Handle load more button click
   const handleLoadMore = () => {
-    setVisibleCount((prevCount) => prevCount + POSTS_PER_PAGE);
+    setIsLoading(true);
+    setTimeout(() => {
+      setVisibleCount((prevCount) => prevCount + POSTS_PER_PAGE);
+      setIsLoading(false);
+    }, 1000);
   };
 
   if (posts.length === 0) {
@@ -32,6 +38,7 @@ export function BlogList({ posts }) {
     );
   }
 
+  // แสดงบทความทั้งหมด
   return (
     <section className="px-[16px] mt-[10px] flex flex-col justify-center items-center gap-[24px] min-[1280px]:px-[120px] min-[1280px]:py-[16px]">
       <div className="flex flex-col justify-center items-center gap-[24px] min-[1280px]:grid min-[1280px]:grid-cols-2 min-[1280px]:gap-[20px] min-[1280px]:place-items-center min-[1280px]:place-content-center">
@@ -48,14 +55,18 @@ export function BlogList({ posts }) {
           />
         ))}
       </div>
-
+      {/* ปุ่มโหลดบทความเพิ่มเติม */}
       {hasMorePosts && (
         <button
-          type="button"
           onClick={handleLoadMore}
-          className="mt-[16px] px-[24px] py-[12px] bg-[#26231E] text-white font-semibold rounded-[8px] hover:bg-[#3a362e] transition-colors duration-200 cursor-pointer"
+          disabled={isLoading}
+          className="mt-[16px] px-[24px] py-[12px] bg-[#26231E] text-white font-semibold rounded-[8px] hover:bg-[#3a362e] transition-colors duration-200 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-[8px]"
         >
-          Load More Post
+          {isLoading ? (
+            <Spinner message="Loading more posts..." />
+          ) : (
+            "Load More Post"
+          )}
         </button>
       )}
     </section>
