@@ -26,7 +26,7 @@ import lollImage from "../assets/images/Dummy Cute Animal Pic/loll.jpg";
 import penguin2Image from "../assets/images/Dummy Cute Animal Pic/Penguin 2.jpg";
 import sleepyCatImage from "../assets/images/Dummy Cute Animal Pic/SleepyWorkingCat.jpg";
 import workoutHamsterImage from "../assets/images/Dummy Cute Animal Pic/Workout hamster.jpg";
-import capybaraCrocImage from "../assets/images/Dummy Cute Animal Pic/Capybara with Croc.jpg";
+import capybaraCrocImage from "../assets/images/Dummy Cute Animal Pic/Capybara with croc.jpg";
 import studyingPenguinImage from "../assets/images/Dummy Cute Animal Pic/StudyPenguin.jpg";
 import NatureRabbitImage from "../assets/images/Dummy Cute Animal Pic/NatureRabbit.jpg";
 import catTechImage from "../assets/images/Dummy Cute Animal Pic/CatTech.jpg";
