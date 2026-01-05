@@ -1,6 +1,7 @@
 import { NavBar, Footer } from "../layout";
 import ArticleContent from "./ArticleContent";
 import CommentSection from "./CommentSection";
+import ScrollProgress from "./components/ScrollProgress";
 export default function ArticlePage() {
   return (
     <div className="bg-[#F9F8F6]">

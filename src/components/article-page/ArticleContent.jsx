@@ -3,9 +3,16 @@ import ArticleHero from "./components/ArticleHero";
 import ArticleBody from "./components/ArticleBody";
 import AuthorCard from "./components/AuthorCard";
 import SocialShare from "./SocialShare";
+import { calculateReadTime } from "../../lib/utils";
+import ScrollProgress from "./components/ScrollProgress";
+
 
 export default function ArticleContent() {
+  const readTime = calculateReadTime(articleSections.map(section => section.content).join(" "));
+
   return (
+    <>
+    <ScrollProgress />
     <main className="flex flex-col justify-center items-center min-h-screen bg-[#F9F8F6] from-stone-50 to-amber-50/30">
       {/* Featured Image - Full Width Hero */}
       <ArticleHero
@@ -13,7 +20,7 @@ export default function ArticleContent() {
         category={articleData.category}
         title={articleData.title}
         date={articleData.date}
-        readTime={articleData.readTime}
+        readTime={readTime}
       />
 
       {/* Article Content */}
@@ -39,5 +46,6 @@ export default function ArticleContent() {
         <SocialShare reactions={321} />
       </div>
     </main>
+    </>
   );
 }

@@ -31,7 +31,7 @@ export default function ArticleHero({
       </header>
 
       <span className="absolute top-6 right-5 font-poppins text-sm text-stone-500 bg-stone-100 px-4 py-2 rounded-full">
-        {readTime} min read
+        ⏱️ {readTime} min read
       </span>
     </figure>
   );
