@@ -78,3 +78,4 @@ In ancient Egypt, cats were revered and even worshipped. The goddess Bastet, oft
 Today, while not seen as divine figures, cats remain beloved members of millions of families worldwide. They've transitioned from useful hunters to internet celebrities and treasured companions who bring joy, comfort, and endless entertainment to our lives.`,
   },
 ];
+

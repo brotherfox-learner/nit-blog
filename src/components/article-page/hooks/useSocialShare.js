@@ -6,6 +6,7 @@ export const useSocialShare = (initialReactions = 0) => {
   const [reactionCount, setReactionCount] = useState(initialReactions);
   const [hasReacted, setHasReacted] = useState(false);
 
+  // คัดลอกลิงค์ของบทความ.
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -16,11 +17,13 @@ export const useSocialShare = (initialReactions = 0) => {
     }
   };
 
+  // ควบคุมการกดปุ่ม reaction ของบทความ.
   const handleReaction = () => {
     setReactionCount((prev) => (hasReacted ? prev - 1 : prev + 1));
     setHasReacted(!hasReacted);
   };
 
+  // แชร์บทความบนโซเชียลมีเดีย.
   const shareOnSocial = (platform, text = "Check out this article!") => {
     const url = encodeURIComponent(window.location.href);
     const encodedText = encodeURIComponent(text);

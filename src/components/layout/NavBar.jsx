@@ -8,9 +8,9 @@ import LogInBtn from "../landing-page/NavBar/LogInBtn";
 import Hamburger from "../landing-page/NavBar/HamburgerBar";
 import Logo from "../landing-page/NavBar/Logo";
 
-export default function NavBar() {
+export default function NavBar({ px = 120 }) {
   return (
-    <nav className="relative z-50 flex items-center justify-between border-b border-[#DAD6D1] px-[24px] py-[12px] min-[1280px]:px-[120px] min-[1280px]:py-[16px] max-w-full">
+    <nav className={`relative z-50 flex items-center justify-between border-b border-[#DAD6D1] px-[24px] py-[12px] min-[1280px]:px-[${px}px] min-[1280px]:py-[16px] max-w-full `}>
       <Logo />
       <Hamburger />
       <div className="flex gap-[8px] max-[768px]:hidden">
@@ -20,4 +20,3 @@ export default function NavBar() {
     </nav>
   );
 }
-

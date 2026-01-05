@@ -1,15 +1,17 @@
 import { CATEGORY_COLORS } from "../constants";
 
-export default function ArticleHero({ image, category, title, date, readTime }) {
+export default function ArticleHero({
+  image,
+  category,
+  title,
+  date,
+  readTime,
+}) {
   const categoryColors = CATEGORY_COLORS[category];
 
   return (
     <figure className="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden m-0">
-      <img
-        src={image}
-        alt={title}
-        className="w-full h-full object-cover"
-      />
+      <img src={image} alt={title} className="w-full h-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent" />
 
       <header className="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-16">
@@ -27,11 +29,10 @@ export default function ArticleHero({ image, category, title, date, readTime }) 
           </time>
         </div>
       </header>
-      
-      <span className="absolute top-6 right-4 font-poppins text-sm text-stone-500 bg-stone-100 px-4 py-2 rounded-full">
+
+      <span className="absolute top-6 right-5 font-poppins text-sm text-stone-500 bg-stone-100 px-4 py-2 rounded-full">
         {readTime} min read
       </span>
     </figure>
   );
 }
-
