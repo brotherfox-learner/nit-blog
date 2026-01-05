@@ -1,13 +1,13 @@
 import { NavBar, Footer } from "../layout";
-import ArticleContent from "./ArticleContent";
-
+import ArticleContent2 from "./ArticleContent";
+import CommentSection2 from "./CommentSection";
 export default function ArticlePage() {
   return (
-  <div>
-    <NavBar />
-    <ArticleContent />
-    
-    <Footer />
-  </div>
-  )
+    <div className="bg-[#F9F8F6]">
+      <NavBar />
+      <ArticleContent2 />
+      <CommentSection2 />
+      <Footer />
+    </div>
+  );
 }
