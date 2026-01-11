@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
-import HeroSection from "./HeroSection/HeroSection";
-import { BlogList } from "../blog/BlogList";
-import ArticleSection from "./ArticleSection/ArticleSection";
-import { blogPosts } from "../../data";
+import HeroSection from "../components/landing-page/HeroSection/HeroSection";
+import { BlogList } from "../components/blog";
+import ArticleSearchBar from "../components/landing-page/ArticleSection/ArticleSearchBar";
+import { blogPosts } from "../data";
+import { NavBar, Footer } from "../components/layout";
 
 export default function LandingPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,14 +32,16 @@ export default function LandingPage() {
 
   return (
     <main>
+      <NavBar />
       <HeroSection />
-      <ArticleSection
+      <ArticleSearchBar
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
       />
       <BlogList posts={filteredPosts} />
+      <Footer />
     </main>
   );
 }

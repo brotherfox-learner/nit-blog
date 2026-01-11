@@ -1,4 +1,4 @@
-import facebookIcon from "../../../assets/icons/f.svg";
+import facebookIcon from "@/assets/icons/f.svg";
 import { LINKEDIN_IN_PATH } from "../constants";
 
 export default function SocialMediaButtons({ onShare }) {

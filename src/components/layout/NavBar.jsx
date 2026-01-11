@@ -16,6 +16,7 @@ export default function NavBar({ px = 120 }) {
       <div className="flex gap-[8px] max-[768px]:hidden">
         <LogInBtn />
         <SignUpBtn />
+        
       </div>
     </nav>
   );

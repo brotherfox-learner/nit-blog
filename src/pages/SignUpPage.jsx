@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { NavBar, Footer } from "../layout";
+import { NavBar } from "../components/layout";
 
 export default function SignUpPage() {
   const {
@@ -195,7 +195,7 @@ export default function SignUpPage() {
           <p className="text-center text-sm text-[#6B7280] mt-10">
             Already have an account?{" "}
             <a
-              href="#"
+              href="/login"
               className="text-[#1a1a1a] font-medium underline hover:text-[#26231E] transition-colors duration-200"
             >
               Log in
