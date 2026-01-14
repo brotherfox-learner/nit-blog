@@ -1,4 +1,4 @@
-import authorPic from "../../../assets/images/Author-main-pic.jpg";
+import authorPic from "@/assets/images/Author-main-pic.jpg";
 
 export default function AuthorPicture() {
   return (

@@ -57,7 +57,7 @@ export function BlogCard({
 
       {/* Nav link ไปยัง Blog Post : Image Container */}
       <a
-        href="#"
+        href="/article"
         className="relative w-[343px] min-[1024px]:w-full h-[64%] overflow-hidden rounded-2xl block group/image"
       >
         {/* รูปภาพหลักภายใน Card: Main Image */}

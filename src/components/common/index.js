@@ -11,6 +11,7 @@ export { SocialIcon } from './SocialIcon';
 export { SearchBox } from './SearchBox';
 export { SelectBar } from './SelectBar';
 export { LabelInput } from './LabelInput';
+export { Spinner } from './Spinner';
 
 // Badge Components
 export { Badge, CategoryBadge, ReadTimeBadge } from './Badge';

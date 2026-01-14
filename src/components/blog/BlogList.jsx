@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BlogCard } from "./BlogCard";
-import { Spinner } from "../common/Spinner";
+import { Spinner } from "../common";
 
 const POSTS_PER_PAGE = 4;
 

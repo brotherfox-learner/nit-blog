@@ -1,8 +1,3 @@
-/**
- * ArticleSection Component - Refactored
- * Following DRY - uses reusable effects
- * High Cohesion - focused on article filtering UI
- */
 
 import {
   SearchBox,
@@ -14,9 +9,17 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/Button";
 
 // Category data - could be moved to constants or fetched from API
-const CATEGORIES = ["All", "Working", "Lifestyle", "Tech", "Travel", "Education", "Nature"];
+const CATEGORIES = [
+  "All",
+  "Working",
+  "Lifestyle",
+  "Tech",
+  "Travel",
+  "Education",
+  "Nature",
+];
 
-export default function ArticleSection({
+export default function ArticleSearchBar({
   searchQuery,
   onSearchChange,
   selectedCategory,
@@ -87,7 +90,11 @@ function MobileCategorySelect({ categories, value, onValueChange }) {
 }
 
 // Sub-component: Desktop category buttons
-function DesktopCategoryButtons({ categories, selectedCategory, onCategoryChange }) {
+function DesktopCategoryButtons({
+  categories,
+  selectedCategory,
+  onCategoryChange,
+}) {
   return (
     <nav className="hidden min-[1280px]:flex min-[1280px]:items-center min-[1280px]:gap-[8px] relative z-10">
       {categories.map((category, index) => (
