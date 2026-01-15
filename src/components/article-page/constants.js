@@ -1,36 +1,7 @@
+import { CATEGORIES } from "../../constants/design";
+
 // Category color configurations
-export const CATEGORY_COLORS = {
-  Working: {
-    bg: "bg-amber-500",
-    text: "text-white",
-    border: "border-amber-400",
-  },
-  Lifestyle: {
-    bg: "bg-pink-500",
-    text: "text-white",
-    border: "border-pink-400",
-  },
-  Tech: {
-    bg: "bg-blue-500",
-    text: "text-white",
-    border: "border-blue-400",
-  },
-  Travel: {
-    bg: "bg-cyan-500",
-    text: "text-white",
-    border: "border-cyan-400",
-  },
-  Education: {
-    bg: "bg-violet-500",
-    text: "text-white",
-    border: "border-violet-400",
-  },
-  Nature: {
-    bg: "bg-emerald-500",
-    text: "text-white",
-    border: "border-emerald-400",
-  },
-};
+export const CATEGORY_COLORS = CATEGORIES
 
 // Social media share URLs
 export const SHARE_URLS = {

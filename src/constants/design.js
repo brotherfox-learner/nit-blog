@@ -121,11 +121,48 @@ export const BLOG_DEFAULTS = {
   loading: 'lazy',
 };
 
+// Article Content Colors - styling based on category
+export const ARTICLECONTENT_COLORS = {
+  General: {
+    // Blue theme
+    descriptionBorder: "border-blue-400",
+    headingBorder: "border-blue-300",
+    headingText: "text-blue-800",
+    bodyText: "text-slate-700",
+    accent: "blue",
+  },
+  Cat: {
+    // Amber/Orange theme
+    descriptionBorder: "border-amber-400",
+    headingBorder: "border-amber-300",
+    headingText: "text-amber-800",
+    bodyText: "text-stone-700",
+    accent: "amber",
+  },
+  Inspiration: {
+    // Pink theme
+    descriptionBorder: "border-pink-400",
+    headingBorder: "border-pink-300",
+    headingText: "text-pink-800",
+    bodyText: "text-slate-700",
+    accent: "pink",
+  },
+  // Default / Highlight (emerald theme)
+  default: {
+    descriptionBorder: "border-emerald-400",
+    headingBorder: "border-emerald-300",
+    headingText: "text-emerald-800",
+    bodyText: "text-stone-700",
+    accent: "emerald",
+  },
+};
+
 export const CATEGORIES = [
   {
     label: "Highlight",
     value: "All",
     colors: {
+      text: "text-white",
       active:
         "bg-gradient-to-r from-[#12B279] to-[#0fa06b] shadow-[#12B279]/30",
       hoverBg: "hover:bg-gradient-to-r hover:from-[#12B279] hover:to-[#0fa06b]",
@@ -137,6 +174,7 @@ export const CATEGORIES = [
     label: "General",
     value: "General",
     colors: {
+      text: "text-white",
       active:
         "bg-gradient-to-r from-[#3B82F6] to-[#2563EB] shadow-[#3B82F6]/30",
       hoverBg: "hover:bg-gradient-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
@@ -148,6 +186,7 @@ export const CATEGORIES = [
     label: "Cat",
     value: "Cat",
     colors: {
+      text: "text-white",
       active:
         "bg-gradient-to-r from-[#F59E0B] to-[#D97706] shadow-[#F59E0B]/30",
       hoverBg: "hover:bg-gradient-to-r hover:from-[#F59E0B] hover:to-[#D97706]",
@@ -159,6 +198,7 @@ export const CATEGORIES = [
     label: "Inspiration",
     value: "Inspiration",
     colors: {
+      text: "text-white",
       active:
         "bg-gradient-to-r from-[#EC4899] to-[#DB2777] shadow-[#EC4899]/30",
       hoverBg: "hover:bg-gradient-to-r hover:from-[#EC4899] hover:to-[#DB2777]",

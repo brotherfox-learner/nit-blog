@@ -1,4 +1,3 @@
-import { articleData, articleSections } from "../../data/articleData";
 import ArticleHero from "./components/ArticleHero";
 import ArticleBody from "./components/ArticleBody";
 import AuthorCard from "./components/AuthorCard";
@@ -6,11 +5,9 @@ import SocialShare from "./SocialShare";
 import { calculateReadTime } from "../../lib/utils";
 import ScrollProgress from "./components/ScrollProgress";
 
-export default function ArticleContent() {
-  const readTime = calculateReadTime(
-    articleSections.map((section) => section.content).join(" ")
-  );
-
+export default function ArticleContent({ articleData }) {
+  console.log(articleData)
+  console.log(articleData.content)
   return (
     <>
       <ScrollProgress />
@@ -21,7 +18,7 @@ export default function ArticleContent() {
           category={articleData.category}
           title={articleData.title}
           date={articleData.date}
-          readTime={readTime}
+          readTime={calculateReadTime(articleData.content)}
         />
 
         {/* Article Content */}
@@ -29,7 +26,8 @@ export default function ArticleContent() {
           <article className="lg:w-[80%] max-w-[815px] xl:max-w-[1000px] px-4 md:px-6 py-8 md:py-[20px]">
             <ArticleBody
               description={articleData.description}
-              sections={articleSections}
+              content={articleData.content}
+              category={articleData.category}
             />
 
             {/* Social Share Section - Hidden on lg and above */}

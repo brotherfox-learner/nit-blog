@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import fetchBlogPost from "../../data/fetchBlogPost";
+import { fetchBlogPostQuery } from "../../data/fetchBlogPost";
 import { BlogCard } from "./BlogCard";
 import { Spinner } from "../common";
 import { calculateReadTime, formatDate } from "../../lib/utils";
@@ -13,12 +13,12 @@ export function NewBlogList({ selectedCategory = "All", searchQuery = "", limit 
 
   // แปลง category value สำหรับ API (All -> empty string)
   const apiCategory = selectedCategory === "All" ? "" : selectedCategory;
-
+  const postId = posts.map(post => post.id);
   // Function โหลด Posts
   const loadPosts = async () => {
     try {
       setIsLoading(true);
-      const data = await fetchBlogPost(1, limit, apiCategory, searchQuery);
+      const data = await fetchBlogPostQuery(1, limit, apiCategory, searchQuery);
       setPosts(data);
       setPage(1);
       setIsLoading(false);
@@ -38,7 +38,7 @@ export function NewBlogList({ selectedCategory = "All", searchQuery = "", limit 
   const handleFetchMore = async () => {
     try {
       setFetchMore(true);
-      const data = await fetchBlogPost(page + 1, limit, apiCategory, searchQuery);
+      const data = await fetchBlogPostQuery(page + 1, limit, apiCategory, searchQuery);
       setPosts([...posts, ...data]);
       setPage(page + 1);
       // เช็คว่ามีข้อมูลเหลือให้ fetch หรือไม่
@@ -64,6 +64,7 @@ export function NewBlogList({ selectedCategory = "All", searchQuery = "", limit 
             {posts.map((post) => (
               <BlogCard
                 key={post.id}
+                postId={post.id}
                 image={post.image}
                 category={post.category}
                 title={post.title}

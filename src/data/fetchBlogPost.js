@@ -1,11 +1,16 @@
 import axios from 'axios';
 
-const fetchBlogPost = async (page = 1, limit = 6, category = "", keyword = "") => {
+const fetchBlogPostQuery = async (page = 1, limit = 6, category = "", keyword = "", postId = "") => {
     const response = await axios.get(`https://blog-post-project-api.vercel.app/posts?page=${page}&limit=${limit}&category=${category}&keyword=${keyword}`);
     return response.data.posts;
 };
 
-export default fetchBlogPost;
+const fetchBlogPostById = async (postId = "") => {
+    const response = await axios.get(`https://blog-post-project-api.vercel.app/posts/${postId}`);
+    return response.data;
+};
+
+export { fetchBlogPostQuery, fetchBlogPostById };
 
 // page
 // number

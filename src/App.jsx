@@ -10,6 +10,7 @@ function App() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/article" element={<ArticlePage />} />
+      <Route path="/article/:postId" element={<ArticlePage />} />
       <Route path="/login" element={<LogInPage />} />
       <Route path="/signup" element={<SignUpPage />} />
     </Routes>

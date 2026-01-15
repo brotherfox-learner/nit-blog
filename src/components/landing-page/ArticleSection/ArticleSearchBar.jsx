@@ -119,10 +119,10 @@ function CategoryButton({ category, colors, index, isSelected, onClick }) {
     <Button
       variant="ghost"
       onClick={onClick}
-      className={`min-w-[70px] relative overflow-hidden font-medium text-[16px] leading-[24px] backdrop-blur-sm rounded-full h-[48px] px-5 transition-all duration-300 ease-out hover:scale-105 active:scale-95 hover:-translate-y-1 group/button ${
+      className={`min-w-[70px] relative overflow-hidden font-medium text-[16px] leading-[24px] backdrop-blur-sm rounded-full h-[48px] px-5 transition-all duration-300 ease-out hover:scale-105 active:scale-95 hover:-translate-y-1 group/button  ${
         isSelected
-          ? `${colors.active} text-white shadow-lg`
-          : `text-[#75716B] ${colors.hoverBg} ${colors.hoverText} ${colors.hoverShadow}`
+          ? `${colors.active} ${colors.hoverText} shadow-lg`
+          : `text-[#75716B] ${colors.hoverBg} ${colors.hoverText} ${colors.hoverShadow} hover:border-transparent`
       }`}
       style={{
         animationDelay: `${index * 100}ms`,
@@ -137,7 +137,7 @@ function CategoryButton({ category, colors, index, isSelected, onClick }) {
       <span className="relative z-10 flex items-center gap-[8px] transition-colors duration-300 hover:cursor-pointer">
         {category}
         {isSelected && (
-          <span className="inline-block w-[6px] h-[6px] bg-white rounded-full animate-pulse" />
+          <span className={`inline-block w-[6px] h-[6px] ${colors.dotColor || "bg-gray-700"} rounded-full animate-pulse`} />
         )}
       </span>
     </Button>

@@ -45,6 +45,7 @@ export function BlogList({ posts }) {
         {visiblePosts.map((post) => (
           <BlogCard
             key={post.id}
+            postId={post.id}
             image={post.image}
             category={post.category}
             title={post.title}
