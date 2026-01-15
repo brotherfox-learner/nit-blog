@@ -1,4 +1,3 @@
-
 import {
   SearchBox,
   SelectBar,
@@ -7,17 +6,7 @@ import {
 } from "@/components/common";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/Button";
-
-// Category data - could be moved to constants or fetched from API
-const CATEGORIES = [
-  "All",
-  "Working",
-  "Lifestyle",
-  "Tech",
-  "Travel",
-  "Education",
-  "Nature",
-];
+import { CATEGORIES } from "@/constants/design";
 
 export default function ArticleSearchBar({
   searchQuery,
@@ -52,7 +41,7 @@ export default function ArticleSearchBar({
         <MobileCategorySelect
           categories={CATEGORIES}
           value={selectedCategory}
-          onValueChange={onCategoryChange}
+          onCategoryChange={onCategoryChange}
         />
 
         {/*Desktop ป้ายหมวดหมู่ของ Blog: Category Buttons */}
@@ -67,7 +56,19 @@ export default function ArticleSearchBar({
 }
 
 // Sub-component: Mobile category selector
-function MobileCategorySelect({ categories, value, onValueChange }) {
+function MobileCategorySelect({ categories, value, onCategoryChange }) {
+  const categoryLabels = categories.map((category) => category.label);
+  const categoryMap = Object.fromEntries(
+    categories.map((category) => [category.label, category.value])
+  );
+
+  const handleChange = (label) => {
+    onCategoryChange(categoryMap[label]);
+  };
+
+  const selectedLabel =
+    categories.find((cat) => cat.value === value)?.label || "Highlight (All)";
+
   return (
     <div className="flex flex-col gap-[4px] min-[1280px]:hidden relative z-10">
       <Label
@@ -78,12 +79,12 @@ function MobileCategorySelect({ categories, value, onValueChange }) {
       </Label>
       <SelectBar
         className="text-[#75716B]"
-        placeholder="All"
+        placeholder="Highlight"
         id="category"
-        items={categories}
+        items={categoryLabels}
         label="Category"
-        value={value}
-        onValueChange={onValueChange}
+        value={selectedLabel}
+        onValueChange={handleChange}
       />
     </div>
   );
@@ -99,11 +100,13 @@ function DesktopCategoryButtons({
     <nav className="hidden min-[1280px]:flex min-[1280px]:items-center min-[1280px]:gap-[8px] relative z-10">
       {categories.map((category, index) => (
         <CategoryButton
-          key={category}
-          category={category}
+          key={category.value}
+          category={category.label}
+          value={category.value}
+          colors={category.colors}
           index={index}
-          isSelected={selectedCategory === category}
-          onClick={() => onCategoryChange(category)}
+          isSelected={selectedCategory === category.value}
+          onClick={() => onCategoryChange(category.value)}
         />
       ))}
     </nav>
@@ -111,28 +114,31 @@ function DesktopCategoryButtons({
 }
 
 // Sub-component: Individual category button
-function CategoryButton({ category, index, isSelected, onClick }) {
+function CategoryButton({ category, colors, index, isSelected, onClick }) {
   return (
     <Button
       variant="ghost"
       onClick={onClick}
-      className={`min-w-[70px] relative overflow-hidden font-medium text-[16px] leading-[24px] backdrop-blur-sm rounded-[10px] h-[48px] px-4 transition-all duration-300 ease-out hover:scale-105 active:scale-95 hover:-translate-y-1 group/button ${
+      className={`min-w-[70px] relative overflow-hidden font-medium text-[16px] leading-[24px] backdrop-blur-sm rounded-full h-[48px] px-5 transition-all duration-300 ease-out hover:scale-105 active:scale-95 hover:-translate-y-1 group/button ${
         isSelected
-          ? "bg-[#12B279] text-white hover:bg-[#0fa06b] shadow-lg"
-          : "text-[#75716B] hover:bg-white hover:text-[#26231E] hover:border-gray-200 hover:shadow-xl"
+          ? `${colors.active} text-white shadow-lg`
+          : `text-[#75716B] ${colors.hoverBg} ${colors.hoverText} ${colors.hoverShadow}`
       }`}
       style={{
         animationDelay: `${index * 100}ms`,
         transition: "all 0.3s ease-out",
       }}
     >
-      {/* Button Background on Hover */}
+      {/* Shimmer effect on hover */}
       {!isSelected && (
-        <span className="absolute inset-0 bg-white opacity-0 group-hover/button:opacity-100 transition-opacity duration-300 rounded-[10px]" />
+        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/button:translate-x-full transition-transform duration-700" />
       )}
 
-      <span className="relative z-10 transition-colors duration-300 hover:cursor-pointer">
+      <span className="relative z-10 flex items-center gap-[8px] transition-colors duration-300 hover:cursor-pointer">
         {category}
+        {isSelected && (
+          <span className="inline-block w-[6px] h-[6px] bg-white rounded-full animate-pulse" />
+        )}
       </span>
     </Button>
   );

@@ -77,7 +77,7 @@ export function BlogCard({
 
         {/* ป้ายเวลาประมาณในการอ่าน Blog: Reading Time Badge - Top Left (show on hover) */}
         <div className="absolute top-2 left-2">
-          <ReadTimeBadge minutes={readTime} showOnHover={true} />
+          <ReadTimeBadge minutes={readTime} />
         </div>
 
         {/* ป้ายหมวดหมู่ของ Blog: Category Badge - Top Right */}

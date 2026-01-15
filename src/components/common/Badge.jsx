@@ -21,6 +21,29 @@ const BADGE_VARIANTS = {
 
 // Category-specific color mappings
 const CATEGORY_COLORS = {
+  // New API categories
+  General: {
+    text: "text-blue-600",
+    border: "border-blue-200",
+    bg: "bg-blue-50/95",
+    hoverBg: "hover:bg-blue-500",
+    shadow: "group-hover:shadow-[0_8px_25px_rgba(59,130,246,0.4)]",
+  },
+  Cat: {
+    text: "text-amber-600",
+    border: "border-amber-200",
+    bg: "bg-amber-50/95",
+    hoverBg: "hover:bg-amber-500",
+    shadow: "group-hover:shadow-[0_8px_25px_rgba(245,158,11,0.4)]",
+  },
+  Inspiration: {
+    text: "text-pink-600",
+    border: "border-pink-200",
+    bg: "bg-pink-50/95",
+    hoverBg: "hover:bg-pink-500",
+    shadow: "group-hover:shadow-[0_8px_25px_rgba(236,72,153,0.4)]",
+  },
+  // Legacy categories (keep for backwards compatibility)
   Working: {
     text: "text-amber-600",
     border: "border-amber-200",

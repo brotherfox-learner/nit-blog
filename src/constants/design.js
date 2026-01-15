@@ -121,3 +121,49 @@ export const BLOG_DEFAULTS = {
   loading: 'lazy',
 };
 
+export const CATEGORIES = [
+  {
+    label: "Highlight",
+    value: "All",
+    colors: {
+      active:
+        "bg-gradient-to-r from-[#12B279] to-[#0fa06b] shadow-[#12B279]/30",
+      hoverBg: "hover:bg-gradient-to-r hover:from-[#12B279] hover:to-[#0fa06b]",
+      hoverText: "hover:text-white",
+      hoverShadow: "hover:shadow-lg hover:shadow-[#12B279]/30",
+    },
+  },
+  {
+    label: "General",
+    value: "General",
+    colors: {
+      active:
+        "bg-gradient-to-r from-[#3B82F6] to-[#2563EB] shadow-[#3B82F6]/30",
+      hoverBg: "hover:bg-gradient-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
+      hoverText: "hover:text-white",
+      hoverShadow: "hover:shadow-lg hover:shadow-[#3B82F6]/30",
+    },
+  },
+  {
+    label: "Cat",
+    value: "Cat",
+    colors: {
+      active:
+        "bg-gradient-to-r from-[#F59E0B] to-[#D97706] shadow-[#F59E0B]/30",
+      hoverBg: "hover:bg-gradient-to-r hover:from-[#F59E0B] hover:to-[#D97706]",
+      hoverText: "hover:text-white",
+      hoverShadow: "hover:shadow-lg hover:shadow-[#F59E0B]/30",
+    },
+  },
+  {
+    label: "Inspiration",
+    value: "Inspiration",
+    colors: {
+      active:
+        "bg-gradient-to-r from-[#EC4899] to-[#DB2777] shadow-[#EC4899]/30",
+      hoverBg: "hover:bg-gradient-to-r hover:from-[#EC4899] hover:to-[#DB2777]",
+      hoverText: "hover:text-white",
+      hoverShadow: "hover:shadow-lg hover:shadow-[#EC4899]/30",
+    },
+  },
+];
