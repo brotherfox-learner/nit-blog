@@ -32,7 +32,6 @@ export function BlogCard({
   objectPosition = BLOG_DEFAULTS.objectPosition,
   className = "",
 }) {
-  console.log(postId);
   return (
     <article
       className={cn(

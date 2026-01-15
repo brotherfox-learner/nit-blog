@@ -6,8 +6,6 @@ import { calculateReadTime } from "../../lib/utils";
 import ScrollProgress from "./components/ScrollProgress";
 
 export default function ArticleContent({ articleData }) {
-  console.log(articleData)
-  console.log(articleData.content)
   return (
     <>
       <ScrollProgress />
