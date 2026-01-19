@@ -5,10 +5,19 @@ import { useParams } from "react-router-dom";
 import { fetchBlogPostById } from "../data/fetchBlogPost";
 import { useState, useEffect } from "react";
 import avatarImage from "../assets/images/Author-main-pic.jpg";
+import { usePopups } from "../components/article-page/hooks/usePopups";
+import LoginAlertDialog from "../components/article-page/components/LoginAlertDialog";
 
 export default function ArticlePage() {
   const [post, setPost] = useState(null);
   const { postId } = useParams();
+  
+  // ไว้เปลี่ยนเป็น actual authentication logic
+  const isLoggedIn = false; 
+  
+  // ยก popup state ขึ้นมาที่ ArticlePage เพื่อใช้ร่วมกันทั้งหมด
+  const { isLoginPopupOpen, openLoginPopup, setIsLoginPopupOpen } = usePopups();
+  
   useEffect(() => {
     const fetchPost = async () => {
       const data = await fetchBlogPostById(postId);
@@ -16,7 +25,9 @@ export default function ArticlePage() {
     };
     fetchPost();
   }, [postId]);
+  
   if (!post) return <div>Loading...</div>;
+  
   return (
     <div className="bg-[#F9F8F6]">
       <NavBar px={0} />
@@ -32,9 +43,20 @@ export default function ArticlePage() {
             "When I'm not writing, I spend time volunteering at my local animal shelter, helping cats find loving homes.",
           ],
         }}
+        isLoggedIn={isLoggedIn}
+        openLoginPopup={openLoginPopup}
       />
-      <CommentSection />
+      <CommentSection 
+        isLoggedIn={isLoggedIn}
+        openLoginPopup={openLoginPopup}
+      />
       <Footer />
+      
+      {/* Dialog ใช้ร่วมกันทั้งหน้า */}
+      <LoginAlertDialog 
+        open={isLoginPopupOpen} 
+        onOpenChange={setIsLoginPopupOpen} 
+      />
     </div>
   );
 }

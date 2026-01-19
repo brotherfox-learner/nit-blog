@@ -4,6 +4,7 @@ import ArticlePage from "./pages/ArticlePage";
 import LogInPage from "./pages/LogInPage";
 import SignUpPage from "./pages/SignUpPage";
 import { Routes, Route } from "react-router-dom";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Route path="/article/:postId" element={<ArticlePage />} />
       <Route path="/login" element={<LogInPage />} />
       <Route path="/signup" element={<SignUpPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

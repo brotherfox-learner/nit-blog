@@ -7,7 +7,11 @@ export const useSocialShare = (initialReactions = 0) => {
   const [hasReacted, setHasReacted] = useState(false);
 
   // คัดลอกลิงค์ของบทความ.
-  const handleCopyLink = async () => {
+  const handleCopyLink = async (isLoggedIn = false, onLoginRequired) => {
+    if (!isLoggedIn && onLoginRequired) {
+      onLoginRequired();
+      return;
+    }
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
@@ -18,13 +22,21 @@ export const useSocialShare = (initialReactions = 0) => {
   };
 
   // ควบคุมการกดปุ่ม reaction ของบทความ.
-  const handleReaction = () => {
+  const handleReaction = (isLoggedIn = false, onLoginRequired) => {
+    if (!isLoggedIn && onLoginRequired) {
+      onLoginRequired();
+      return;
+    }
     setReactionCount((prev) => (hasReacted ? prev - 1 : prev + 1));
     setHasReacted(!hasReacted);
   };
 
   // แชร์บทความบนโซเชียลมีเดีย.
-  const shareOnSocial = (platform, text = "Check out this article!") => {
+  const shareOnSocial = (platform, text = "Check out this article!", isLoggedIn = false, onLoginRequired) => {
+    if (!isLoggedIn && onLoginRequired) {
+      onLoginRequired();
+      return;
+    }
     const url = encodeURIComponent(window.location.href);
     const encodedText = encodeURIComponent(text);
     

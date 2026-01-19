@@ -2,17 +2,14 @@ export default function ReactionButton({ reactionCount, hasReacted, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex max-lg:w-[343px] lg:max-w-[17vw] xl:max-w-[20vw] lg:w-[25vw] items-center justify-center gap-2.5 lg:gap-1.5 xl:gap-2.5 px-6 lg:px-4 xl:px-6 py-3.5 lg:py-2.5 xl:py-3.5 bg-white border rounded-full cursor-pointer transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 ${
-        hasReacted ? "border-amber-400 bg-amber-50" : "border-neutral-200"
-      }`}
-      aria-label={`${reactionCount} reactions. Click to ${
-        hasReacted ? "remove" : "add"
-      } your reaction`}
+      className={`flex max-lg:w-[343px] lg:max-w-[10vw] xl:max-w-[10vw] lg:w-[25vw] items-center justify-center gap-2.5 lg:gap-1.5 xl:gap-2.5 px-6 lg:px-4 xl:px-6 py-2 lg:py-2 xl:py-2 bg-white border rounded-full cursor-pointer transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 ${hasReacted ? "border-amber-400 bg-amber-50" : "border-neutral-200"
+        }`}
+      aria-label={`${reactionCount} reactions. Click to ${hasReacted ? "remove" : "add"
+        } your reaction`}
     >
       <svg
-        className={`w-6 h-6 lg:w-5 lg:h-5 xl:w-6 xl:h-6 ${
-          hasReacted ? "text-amber-500" : "text-neutral-600"
-        }`}
+        className={`w-6 h-6 lg:w-5 lg:h-5 xl:w-6 xl:h-6 ${hasReacted ? "text-amber-500" : "text-neutral-600"
+          }`}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -34,3 +31,4 @@ export default function ReactionButton({ reactionCount, hasReacted, onClick }) {
     </button>
   );
 }
+//เอาไป Render ใน SocialShareSection.jsx

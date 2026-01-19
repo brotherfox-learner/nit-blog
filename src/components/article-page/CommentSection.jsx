@@ -31,7 +31,7 @@ const initialComments = [
   },
 ];
 
-export default function CommentSection() {
+export default function CommentSection({ isLoggedIn = false, openLoginPopup }) {
   const { comments, commentText, setCommentText, handleSubmit } =
     useComments(initialComments);
 
@@ -47,7 +47,7 @@ export default function CommentSection() {
           <CommentForm
             commentText={commentText}
             onCommentChange={(e) => setCommentText(e.target.value)}
-            onSubmit={handleSubmit}
+            onSubmit={(e) => handleSubmit(e, isLoggedIn, openLoginPopup)}
           />
         </div>
 

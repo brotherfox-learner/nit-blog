@@ -27,3 +27,4 @@ export default function ScrollProgress() {
     </div>
   );
 }
+//เอาไป Render ใน ArticleContent.jsx

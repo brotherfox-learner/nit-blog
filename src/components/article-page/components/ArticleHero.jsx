@@ -1,4 +1,7 @@
+// ArticleHero.jsx รูปภาพหัวข้อบทความ
+
 import { CATEGORY_COLORS } from "../constants";
+import { formatDate } from "../../../lib/utils";
 
 export default function ArticleHero({
   image,
@@ -25,7 +28,7 @@ export default function ArticleHero({
             {title}
           </h1>
           <time className="font-poppins text-xs md:text-xs lg:text-s text-white">
-            {date}
+            {formatDate(date)}
           </time>
         </div>
       </header>
@@ -36,3 +39,4 @@ export default function ArticleHero({
     </figure>
   );
 }
+//เอาไป Render ใน ArticleContent.jsx

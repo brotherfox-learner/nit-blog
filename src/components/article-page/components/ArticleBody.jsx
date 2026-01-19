@@ -30,7 +30,8 @@ function parseMarkdownContent(content) {
 export default function ArticleBody({ description, content, category }) {
   // Parse the markdown content from API
   const sections = parseMarkdownContent(content);
-  
+  console.log(content);
+
   // Get colors based on category
   const colors = ARTICLECONTENT_COLORS[category] || ARTICLECONTENT_COLORS.default;
   
@@ -66,3 +67,4 @@ export default function ArticleBody({ description, content, category }) {
   );
 }
 
+//เอาไป Render ใน ArticleContent.jsx

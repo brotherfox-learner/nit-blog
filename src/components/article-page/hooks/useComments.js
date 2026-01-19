@@ -4,8 +4,14 @@ export const useComments = (initialComments = []) => {
   const [comments, setComments] = useState(initialComments);
   const [commentText, setCommentText] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, isLoggedIn = false, onLoginRequired) => {
     e.preventDefault();
+    
+    if (!isLoggedIn && onLoginRequired) {
+      onLoginRequired();
+      return;
+    }
+    
     if (commentText.trim()) {
       const newComment = {
         id: Date.now(),

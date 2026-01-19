@@ -1,11 +1,14 @@
+// ArticleContent.jsx ส่วนเนื้อหาของบทความ
+
 import ArticleHero from "./components/ArticleHero";
 import ArticleBody from "./components/ArticleBody";
 import AuthorCard from "./components/AuthorCard";
-import SocialShare from "./SocialShare";
+import SocialShareSection from "./SocialShareSection";
 import { calculateReadTime } from "../../lib/utils";
 import ScrollProgress from "./components/ScrollProgress";
 
-export default function ArticleContent({ articleData }) {
+
+export default function ArticleContent({ articleData, isLoggedIn = false, openLoginPopup }) {
   return (
     <>
       <ScrollProgress />
@@ -30,7 +33,12 @@ export default function ArticleContent({ articleData }) {
 
             {/* Social Share Section - Hidden on lg and above */}
             <div className="max-lg:hidden mt-[48px]">
-              <SocialShare reactions={321} rounded={true} />
+              <SocialShareSection 
+                reactions={321} 
+                rounded={true} 
+                isLoggedIn={isLoggedIn}
+                openLoginPopup={openLoginPopup}
+              />
             </div>
           </article>
 
@@ -40,7 +48,11 @@ export default function ArticleContent({ articleData }) {
 
         {/* Social Share Section - Full Width, Show on lg and above */}
         <div className="lg:hidden w-full mt-[48px]">
-          <SocialShare reactions={321} />
+          <SocialShareSection 
+            reactions={321} 
+            isLoggedIn={isLoggedIn}
+            openLoginPopup={openLoginPopup}
+          />
         </div>
       </main>
     </>
