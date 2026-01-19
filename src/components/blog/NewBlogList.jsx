@@ -55,7 +55,7 @@ export function NewBlogList({ selectedCategory = "All", searchQuery = "", limit 
               )}
             </button>
           ) : (
-            <div className="mt-[16px] px-[24px] py-[12px] bg-gradient-to-r from-gray-50 to-gray-100 text-[#75716B] font-medium rounded-[8px] flex items-center justify-center gap-[8px] border border-gray-200 shadow-sm">
+            <div className="mt-[16px] px-[24px] py-[12px] bg-gradient-to-r from-gray-50 to-gray-100 text-[#75716B] font-medium rounded-full flex items-center justify-center gap-[8px] border border-gray-200 shadow-sm">
               <span className="text-emerald-600 text-base">✓</span>
               <span className="text-sm">All posts seen</span>
             </div>
