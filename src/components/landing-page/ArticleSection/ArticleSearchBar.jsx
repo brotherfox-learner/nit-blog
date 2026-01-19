@@ -5,7 +5,7 @@ import {
   SparkleEffect,
 } from "@/components/common";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { CATEGORIES } from "@/constants/design";
 
 export default function ArticleSearchBar({
