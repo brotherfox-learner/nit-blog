@@ -1,9 +1,11 @@
-import { useSocialShare } from "./hooks/useSocialShare";
+import { useSocialShare, useAuth } from "../../hooks";
 import ReactionButton from "./components/ReactionButton";
 import CopyLinkButton from "./components/CopyLinkButton";
 import SocialMediaButtons from "./components/SocialMediaButtons";
 
-export default function SocialShareSection({ reactions = 321, rounded, isLoggedIn = false, openLoginPopup }) {
+export default function SocialShareSection({ reactions = 321, rounded }) {
+  const { requireAuth } = useAuth();
+  
   const {
     copied,
     reactionCount,
@@ -24,17 +26,17 @@ export default function SocialShareSection({ reactions = 321, rounded, isLoggedI
       <ReactionButton
         reactionCount={reactionCount}
         hasReacted={hasReacted}
-        onClick={() => handleReaction(isLoggedIn, openLoginPopup)}
+        onClick={() => handleReaction(requireAuth)}
       />
 
       {/* Share Actions */}
       <div className="min-w-[343px] lg:min-w-0 flex flex-row justify-between items-center gap-2 lg:gap-4 xl:gap-4 bg-[#EFEEEB]">
         <CopyLinkButton 
           copied={copied} 
-          onClick={() => handleCopyLink(isLoggedIn, openLoginPopup)} 
+          onClick={() => handleCopyLink(requireAuth)} 
         />
         <SocialMediaButtons 
-          onShare={(platform, text) => shareOnSocial(platform, text, isLoggedIn, openLoginPopup)} 
+          onShare={(platform, text) => shareOnSocial(platform, text, requireAuth)} 
         />
       </div>
     </section>

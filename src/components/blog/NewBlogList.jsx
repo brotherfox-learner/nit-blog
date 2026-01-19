@@ -1,55 +1,21 @@
-import { useState, useEffect } from "react";
-import { fetchBlogPostQuery } from "../../data/fetchBlogPost";
+import { useBlogPosts } from "../../hooks";
 import { BlogCard } from "./BlogCard";
 import { Spinner } from "../common";
 import { calculateReadTime, formatDate } from "../../lib/utils";
 
 export function NewBlogList({ selectedCategory = "All", searchQuery = "", limit = 6 }) {
-  const [posts, setPosts] = useState([]);
-  const [fetchMore, setFetchMore] = useState(false);
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasMoreData, setHasMoreData] = useState(true);
-
-  // แปลง category value สำหรับ API (All -> empty string)
-  const apiCategory = selectedCategory === "All" ? "" : selectedCategory;
-  const postId = posts.map(post => post.id);
-  // Function โหลด Posts
-  const loadPosts = async () => {
-    try {
-      setIsLoading(true);
-      const data = await fetchBlogPostQuery(1, limit, apiCategory, searchQuery);
-      setPosts(data);
-      setPage(1);
-      setIsLoading(false);
-      // เช็คว่ามีข้อมูลเหลือให้ fetch หรือไม่ (ถ้าได้ข้อมูลน้อยกว่า limit แสดงว่าไม่มีข้อมูลเหลือ)
-      setHasMoreData(data.length >= limit);
-    } catch (error) {
-      setIsLoading(false);
-      setHasMoreData(false);
-    }
-  };
-
-  // Fetch posts เมื่อ category หรือ search query เปลี่ยน
-  useEffect(() => {
-    loadPosts();
-  }, [apiCategory, searchQuery]);
-
-  const handleFetchMore = async () => {
-    try {
-      setFetchMore(true);
-      const data = await fetchBlogPostQuery(page + 1, limit, apiCategory, searchQuery);
-      setPosts([...posts, ...data]);
-      setPage(page + 1);
-      // เช็คว่ามีข้อมูลเหลือให้ fetch หรือไม่
-      setHasMoreData(data.length >= limit);
-    } catch (error) {
-      console.error("Error fetching more posts:", error);
-      setHasMoreData(false);
-    } finally {
-      setFetchMore(false);
-    }
-  };
+  // ใช้ useBlogPosts hook แทน useState + useEffect
+  const {
+    posts,
+    isLoading,
+    isFetchingMore,
+    hasMoreData,
+    fetchMore,
+  } = useBlogPosts({
+    category: selectedCategory,
+    searchQuery,
+    limit,
+  });
 
   return (
     <section className="px-[16px] mt-[10px] flex flex-col justify-center items-center gap-[24px] min-[1280px]:px-[120px] min-[1280px]:py-[16px]">
@@ -78,11 +44,11 @@ export function NewBlogList({ selectedCategory = "All", searchQuery = "", limit 
           {/* Load More Button / All Posts Seen */}
           {hasMoreData ? (
             <button
-              onClick={handleFetchMore}
-              disabled={fetchMore}
+              onClick={fetchMore}
+              disabled={isFetchingMore}
               className="mt-[16px] px-[24px] py-[12px] bg-[#26231E] text-white font-semibold rounded-[8px] hover:bg-[#3a362e] transition-colors duration-200 cursor-pointer flex items-center gap-[8px] disabled:opacity-70 disabled:cursor-wait"
             >
-              {fetchMore ? (
+              {isFetchingMore ? (
                 <Spinner message="Loading more posts..." />
               ) : (
                 "Load More Post"

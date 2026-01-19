@@ -7,8 +7,7 @@ import SocialShareSection from "./SocialShareSection";
 import { calculateReadTime } from "../../lib/utils";
 import ScrollProgress from "./components/ScrollProgress";
 
-
-export default function ArticleContent({ articleData, isLoggedIn = false, openLoginPopup }) {
+export default function ArticleContent({ articleData }) {
   return (
     <>
       <ScrollProgress />
@@ -36,8 +35,6 @@ export default function ArticleContent({ articleData, isLoggedIn = false, openLo
               <SocialShareSection 
                 reactions={321} 
                 rounded={true} 
-                isLoggedIn={isLoggedIn}
-                openLoginPopup={openLoginPopup}
               />
             </div>
           </article>
@@ -50,8 +47,6 @@ export default function ArticleContent({ articleData, isLoggedIn = false, openLo
         <div className="lg:hidden w-full mt-[48px]">
           <SocialShareSection 
             reactions={321} 
-            isLoggedIn={isLoggedIn}
-            openLoginPopup={openLoginPopup}
           />
         </div>
       </main>

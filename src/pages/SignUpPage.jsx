@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { NavBar } from "../components/layout";
+import { useFormStyles } from "../hooks";
 
 export default function SignUpPage() {
   const {
@@ -15,17 +16,12 @@ export default function SignUpPage() {
     },
   });
 
+  // ใช้ useFormStyles hook แทน duplicate styles
+  const { getInputClassName, labelStyles, errorStyles, submitButtonStyles } = useFormStyles();
+
   const onSubmit = (data) => {
     console.log("Form submitted:", data);
   };
-
-  // Reusable input styles
-  const inputBaseStyles =
-    "w-full px-4 py-3 bg-white border rounded-lg text-[#1a1a1a] placeholder-[#9CA3AF] focus:outline-none focus:ring-1 transition-all duration-200";
-  const inputNormalStyles =
-    "border-[#E5E5E5] focus:border-[#26231E] focus:ring-[#26231E]";
-  const inputErrorStyles =
-    "border-red-500 focus:border-red-500 focus:ring-red-500";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -47,7 +43,7 @@ export default function SignUpPage() {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="name"
-                className="text-sm font-medium text-[#1a1a1a]"
+                className={labelStyles}
               >
                 Name
               </label>
@@ -56,9 +52,7 @@ export default function SignUpPage() {
                 type="text"
                 id="name"
                 placeholder="Enter your full name"
-                className={`${inputBaseStyles} ${
-                  errors.name ? inputErrorStyles : inputNormalStyles
-                }`}
+                className={getInputClassName(errors.name)}
                 {...register("name", {
                   required: "Name is required",
                   minLength: {
@@ -69,7 +63,7 @@ export default function SignUpPage() {
               />
               {/* Name Input Field Error */}
               {errors.name && (
-                <span className="text-red-500 text-xs mt-1">
+                <span className={errorStyles}>
                   {errors.name.message}
                 </span>
               )}
@@ -79,7 +73,7 @@ export default function SignUpPage() {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="username"
-                className="text-sm font-medium text-[#1a1a1a]"
+                className={labelStyles}
               >
                 Username
               </label>
@@ -88,9 +82,7 @@ export default function SignUpPage() {
                 type="text"
                 id="username"
                 placeholder="Enter your username"
-                className={`${inputBaseStyles} ${
-                  errors.username ? inputErrorStyles : inputNormalStyles
-                }`}
+                className={getInputClassName(errors.username)}
                 {...register("username", {
                   required: "Username is required",
                   minLength: {
@@ -106,7 +98,7 @@ export default function SignUpPage() {
               />
               {/* Username Input Field Error */}
               {errors.username && (
-                <span className="text-red-500 text-xs mt-1">
+                <span className={errorStyles}>
                   {errors.username.message}
                 </span>
               )}
@@ -116,7 +108,7 @@ export default function SignUpPage() {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="email"
-                className="text-sm font-medium text-[#1a1a1a]"
+                className={labelStyles}
               >
                 Email
               </label>
@@ -125,9 +117,7 @@ export default function SignUpPage() {
                 type="email"
                 id="email"
                 placeholder="Enter your email address"
-                className={`${inputBaseStyles} ${
-                  errors.email ? inputErrorStyles : inputNormalStyles
-                }`}
+                className={getInputClassName(errors.email)}
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
@@ -138,7 +128,7 @@ export default function SignUpPage() {
               />
               {/* Email Input Field Error */}
               {errors.email && (
-                <span className="text-red-500 text-xs mt-1">
+                <span className={errorStyles}>
                   {errors.email.message}
                 </span>
               )}
@@ -148,7 +138,7 @@ export default function SignUpPage() {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="password"
-                className="text-sm font-medium text-[#1a1a1a]"
+                className={labelStyles}
               >
                 Password
               </label>
@@ -157,9 +147,7 @@ export default function SignUpPage() {
                 type="password"
                 id="password"
                 placeholder="Enter your password"
-                className={`${inputBaseStyles} ${
-                  errors.password ? inputErrorStyles : inputNormalStyles
-                }`}
+                className={getInputClassName(errors.password)}
                 {...register("password", {
                   required: "Password is required",
                   minLength: {
@@ -175,7 +163,7 @@ export default function SignUpPage() {
               />
               {/* Password Input Field Error */}
               {errors.password && (
-                <span className="text-red-500 text-xs mt-1">
+                <span className={errorStyles}>
                   {errors.password.message}
                 </span>
               )}
@@ -185,7 +173,7 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-[160px] mx-auto mt-4 py-3 bg-[#26231E] text-white font-semibold rounded-full hover:bg-[#3a362e] transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className={submitButtonStyles}
             >
               {isSubmitting ? "Signing up..." : "Sign up"}
             </button>
