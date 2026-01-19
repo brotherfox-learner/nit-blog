@@ -1,18 +1,45 @@
 import {
-  SearchBox,
   SelectBar,
   ShimmerEffect,
   SparkleEffect,
+  SearchBoxWithAutocomplete,
 } from "@/components/common";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES } from "@/constants/design";
 
+/**
+ * ArticleSearchBar - ส่วนการค้นหา & ป้ายหมวดหมู่ของ Blog
+ * Parent: LandingPage
+ * @param {string} searchQuery - ค่าที่ใช้ fetch blog list
+ * @param {function} onSearchChange - function สำหรับกดปุ่ม search
+ * @param {function} onKeyDown - function สำหรับกด Enter
+ * @param {function} onSearchClick - function สำหรับกดปุ่ม search
+ * @param {function} onClear - function สำหรับล้างค่า
+ * @param {string} selectedCategory - ค่าที่ใช้ fetch blog list
+ * @param {function} onCategoryChange - function สำหรับกดปุ่ม search
+ * @param {array} suggestions - ค่าที่ใช้ fetch blog list
+ * @param {boolean} isLoadingSuggestions - ค่าที่ใช้ fetch blog list
+ * @param {boolean} showSuggestions - ค่าที่ใช้ fetch blog list
+ * @param {function} onSelectSuggestion - function สำหรับกดปุ่ม search
+ * @param {function} onSearchFocus - function สำหรับกดปุ่ม search
+ * @param {function} onSearchBlur - function สำหรับกดปุ่ม search
+ */
+
 export default function ArticleSearchBar({
   searchQuery,
   onSearchChange,
+  onKeyDown,
+  onSearchClick,
+  onClear,
   selectedCategory,
   onCategoryChange,
+  suggestions = [],
+  isLoadingSuggestions = false,
+  showSuggestions = false,
+  onSelectSuggestion,
+  onSearchFocus,
+  closeSuggestions,
 }) {
   return (
     <section className="flex flex-col gap-[16px] py-[16px] min-[1280px]:px-[120px] min-[1280px]:h-[144px] group/section">
@@ -23,17 +50,26 @@ export default function ArticleSearchBar({
       </h2>
 
       {/* ส่วนการค้นหา & ป้ายหมวดหมู่ของ Blog: Filter Container */}
-      <div className="relative flex flex-col gap-[16px] bg-[#EFEEEB] p-[38px] min-[1280px]:rounded-xl min-[1280px]:flex-row-reverse min-[1280px]:items-center min-[1280px]:gap-[16px] min-[1280px]:justify-between min-[1280px]:h-[80px] transition-all duration-500 hover:shadow-2xl min-[1280px]:hover:bg-linear-to-br min-[1280px]:hover:from-[#E8E6E3] min-[1280px]:hover:to-[#EFEEEB] min-[1280px]:hover:scale-[1.01] overflow-hidden border-2 border-transparent min-[1280px]:hover:border-[#DAD6D1]/50">
+      <div className="relative flex flex-col gap-[16px] bg-[#EFEEEB] p-[38px] min-[1280px]:rounded-xl min-[1280px]:flex-row-reverse min-[1280px]:items-center min-[1280px]:gap-[16px] min-[1280px]:justify-between min-[1280px]:min-h-[80px] transition-all duration-500 hover:shadow-2xl min-[1280px]:hover:bg-linear-to-br min-[1280px]:hover:from-[#E8E6E3] min-[1280px]:hover:to-[#EFEEEB] border-2 border-transparent min-[1280px]:hover:border-[#DAD6D1]/50 overflow-visible">
         {/* สีภายในส่วนการค้นหา & ป้ายหมวดหมู่ของ Blog: Background Effects */}
         <div className="absolute inset-0 bg-linear-to-r from-[#12B279]/0 via-[#12B279]/5 to-[#12B279]/0 opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
         <ShimmerEffect className="group-hover/section:translate-x-full" />
 
-        {/* กล่องค้นหาของ Blog: SearchBox */}
-        <div className="flex min-[1280px]:w-[360px] relative z-10">
-          <SearchBox
+        {/* กล่องค้นหาของ Blog: SearchBox with Autocomplete */}
+        <div className="flex min-[1280px]:w-[360px] relative z-50">
+          <SearchBoxWithAutocomplete
             value={searchQuery}
             onChange={onSearchChange}
+            onKeyDown={onKeyDown}
+            onSearchClick={onSearchClick}
+            onClear={onClear}
             placeholder="Search by title..."
+            suggestions={suggestions}
+            isLoading={isLoadingSuggestions}
+            showSuggestions={showSuggestions}
+            onSelectSuggestion={onSelectSuggestion}
+            onFocus={onSearchFocus}
+            closeSuggestions={closeSuggestions}
           />
         </div>
 

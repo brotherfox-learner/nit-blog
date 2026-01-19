@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useToast } from "./useToast";
 
 // Social media share URLs
 const SHARE_URLS = {
@@ -14,6 +15,7 @@ const SHARE_URLS = {
  */
 export function useSocialShare(initialReactions = 0) {
   const [copied, setCopied] = useState(false);
+  const { showToast } = useToast();
   const [reactionCount, setReactionCount] = useState(initialReactions);
   const [hasReacted, setHasReacted] = useState(false);
 
@@ -24,12 +26,23 @@ export function useSocialShare(initialReactions = 0) {
     }
     try {
       await navigator.clipboard.writeText(window.location.href);
+      // แสดง toast notification
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      showToast(
+        "Copied!",
+        "This article has been copied to your clipboard.",
+        2000
+      );
     } catch (err) {
       console.error("Failed to copy link:", err);
+      showToast(
+        "Failed to copy",
+        "Please try again.",
+        2000
+      );
     }
-  }, []);
+  }, [showToast]);
 
   // ควบคุมการกดปุ่ม reaction ของบทความ
   const handleReaction = useCallback((requireAuth) => {
@@ -67,9 +80,9 @@ export function useSocialShare(initialReactions = 0) {
   }, []);
 
   return {
-    copied,
     reactionCount,
     hasReacted,
+    copied,
     handleCopyLink,
     handleReaction,
     shareOnSocial,

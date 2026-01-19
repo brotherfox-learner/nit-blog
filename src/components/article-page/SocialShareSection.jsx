@@ -32,8 +32,8 @@ export default function SocialShareSection({ reactions = 321, rounded }) {
       {/* Share Actions */}
       <div className="min-w-[343px] lg:min-w-0 flex flex-row justify-between items-center gap-2 lg:gap-4 xl:gap-4 bg-[#EFEEEB]">
         <CopyLinkButton 
-          copied={copied} 
-          onClick={() => handleCopyLink(requireAuth)} 
+          copied={copied}
+          onClick={() => handleCopyLink()} 
         />
         <SocialMediaButtons 
           onShare={(platform, text) => shareOnSocial(platform, text, requireAuth)} 

@@ -22,12 +22,12 @@ export default function LogInPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* NavBar */}
       <NavBar />
       {/* Main */}
       <main className="flex-1 flex justify-center px-4 py-12">
-        <section className="flex flex-col justify-between h-[50vh] min-h-[448px] min-w-[350px] w-[65vw] bg-[#EFEEEB] rounded-2xl py-[5vh] px-[5vw] max-w-[798px]">
+        <section className="flex flex-col justify-between min-h-[50vh] min-w-[350px] w-[65vw] bg-[#EFEEEB] rounded-2xl py-[5vh] px-[5vw] max-w-[798px]">
           {/* Log In Form Title */}
           <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-8">
             Log in

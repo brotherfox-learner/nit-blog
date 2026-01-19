@@ -24,12 +24,12 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* NavBar */}
       <NavBar />
       {/* Main */}
-      <main className="flex-1 flex justify-center px-4 py-12">
-        <section className=" h-[648px] min-w-[350px] w-[65vw] bg-[#EFEEEB] rounded-2xl py-[5vh] px-[5vw] max-w-[798px]">
+      <main className="flex-1 flex justify-center px-4 py-12 ">
+        <section className="min-h-[70vh] min-w-[350px] w-[65vw] bg-[#EFEEEB] rounded-2xl py-[5vh] px-[5vw] max-w-[798px]">
           {/* Sign Up Form Title */}
           <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-8">
             Sign up

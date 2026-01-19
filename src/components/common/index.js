@@ -12,6 +12,8 @@ export { SearchBox } from './SearchBox';
 export { SelectBar } from './SelectBar';
 export { LabelInput } from './LabelInput';
 export { Spinner } from './Spinner';
+export { Toast } from './Toast';
+export { SearchBoxWithAutocomplete } from './SearchBoxWithAutocomplete';
 
 // Badge Components
 export { Badge, CategoryBadge, ReadTimeBadge } from './Badge';

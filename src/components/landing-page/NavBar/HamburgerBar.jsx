@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SignUpBtn from "./SignUpBtn";
 import LogInBtn from "./LogInBtn";
+import { Link } from "react-router-dom";
 
 export default function HamburgerBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,41 +25,36 @@ export default function HamburgerBar() {
       >
         <div className="relative w-3 h-4 flex flex-col justify-between">
           <span
-            className={`w-6 h-[2px] bg-[#26231E] rounded-full transition-all duration-300 origin-center ${
-              isOpen ? "rotate-45 translate-y-2" : ""
-            }`}
+            className={`w-6 h-[2px] bg-[#26231E] rounded-full transition-all duration-300 origin-center ${isOpen ? "rotate-45 translate-y-2" : ""
+              }`}
           />
           <span
-            className={`w-6 h-[2px] bg-[#26231E] rounded-full transition-all duration-300 ${
-              isOpen ? "opacity-0 scale-0" : "opacity-100 scale-100"
-            }`}
+            className={`w-6 h-[2px] bg-[#26231E] rounded-full transition-all duration-300 ${isOpen ? "opacity-0 scale-0" : "opacity-100 scale-100"
+              }`}
           />
           <span
-            className={`w-6 h-[2px] bg-[#26231E] rounded-full transition-all duration-300 origin-center ${
-              isOpen ? "-rotate-45 -translate-y-2" : ""
-            }`}
+            className={`w-6 h-[2px] bg-[#26231E] rounded-full transition-all duration-300 origin-center ${isOpen ? "-rotate-45 -translate-y-2" : ""
+              }`}
           />
         </div>
       </button>
 
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity duration-300 ${
-          isOpen
+        className={`fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity duration-300 ${isOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
-        }`}
+          }`}
         onClick={closeMenu}
         aria-hidden="true"
       />
 
       {/* Dropdown Menu */}
       <nav
-        className={`absolute top-full right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-[#DAD6D1]/50 z-50 overflow-hidden transition-all duration-300 ease-out ${
-          isOpen
+        className={`absolute top-full right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-[#DAD6D1]/50 z-50 overflow-hidden transition-all duration-300 ease-out ${isOpen
             ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
             : "opacity-0 -translate-y-4 scale-95 pointer-events-none"
-        }`}
+          }`}
       >
         {/* Menu Header */}
         <div className="bg-[#EFEEEB] px-5 py-4 border-b border-[#DAD6D1]/50">
@@ -71,7 +67,7 @@ export default function HamburgerBar() {
         {/* Menu Content */}
         <div className="flex flex-col gap-3 p-5">
           {/* Auth Buttons */}
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-row justify-center items-center gap-5">
             <LogInBtn className="w-full justify-center h-11" />
 
             <SignUpBtn
@@ -86,8 +82,8 @@ export default function HamburgerBar() {
           {/* Quick Links */}
           <div className="flex flex-col gap-1">
             {/* Home Link */}
-            <a
-              href="#"
+            <Link
+              to="/"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
               onClick={closeMenu}
             >
@@ -105,10 +101,10 @@ export default function HamburgerBar() {
                 />
               </svg>
               <span className="font-medium text-sm">Home</span>
-            </a>
+            </Link>
             {/* Articles Link */}
-            <a
-              href="#"
+            <Link
+              to="/"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
               onClick={closeMenu}
             >
@@ -126,10 +122,10 @@ export default function HamburgerBar() {
                 />
               </svg>
               <span className="font-medium text-sm">Articles</span>
-            </a>
+            </Link>
             {/* About Link */}
-            <a
-              href="#"
+            <Link
+              to="/"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
               onClick={closeMenu}
             >
@@ -147,7 +143,7 @@ export default function HamburgerBar() {
                 />
               </svg>
               <span className="font-medium text-sm">About</span>
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
