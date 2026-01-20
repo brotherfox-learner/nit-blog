@@ -1,4 +1,7 @@
+// ArticleHero.jsx รูปภาพหัวข้อบทความ
+
 import { CATEGORY_COLORS } from "../constants";
+import { formatDate } from "../../../lib/utils";
 
 export default function ArticleHero({
   image,
@@ -7,8 +10,8 @@ export default function ArticleHero({
   date,
   readTime,
 }) {
-  const categoryColors = CATEGORY_COLORS[category];
-
+  const categories = CATEGORY_COLORS;
+  const categoryColors = categories.find((c) => c.value === category).colors;
   return (
     <figure className="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden m-0">
       <img src={image} alt={title} className="w-full h-full object-cover" />
@@ -17,7 +20,7 @@ export default function ArticleHero({
       <header className="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-16">
         <div className="max-w-4xl mx-auto">
           <span
-            className={`inline-block ${categoryColors.bg} ${categoryColors.text} font-poppins text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-4`}
+            className={`inline-block ${categoryColors.active} ${categoryColors.text} font-poppins text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-4`}
           >
             {category}
           </span>
@@ -25,7 +28,7 @@ export default function ArticleHero({
             {title}
           </h1>
           <time className="font-poppins text-xs md:text-xs lg:text-s text-white">
-            {date}
+            {formatDate(date)}
           </time>
         </div>
       </header>
@@ -36,3 +39,4 @@ export default function ArticleHero({
     </figure>
   );
 }
+//เอาไป Render ใน ArticleContent.jsx

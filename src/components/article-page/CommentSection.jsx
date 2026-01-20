@@ -1,6 +1,7 @@
 import avatarImage from "../../assets/images/Author-main-pic.jpg";
 import catImage from "../../assets/images/Dummy Cute Animal Pic/Cat.jpg";
-import { useComments } from "./hooks/useComments";
+import { useComments } from "../../hooks";
+import { useAuth } from "../../contexts";
 import CommentForm from "./components/CommentForm";
 import Comment from "./components/Comment";
 
@@ -32,6 +33,7 @@ const initialComments = [
 ];
 
 export default function CommentSection() {
+  const { requireAuth } = useAuth();
   const { comments, commentText, setCommentText, handleSubmit } =
     useComments(initialComments);
 
@@ -43,11 +45,11 @@ export default function CommentSection() {
             Comments
           </div>
 
-          {/* Comment Form */}
+          {/* Comment Form - ใช้ requireAuth จาก context */}
           <CommentForm
             commentText={commentText}
             onCommentChange={(e) => setCommentText(e.target.value)}
-            onSubmit={handleSubmit}
+            onSubmit={(e) => handleSubmit(e, requireAuth)}
           />
         </div>
 
@@ -65,4 +67,3 @@ export default function CommentSection() {
     </section>
   );
 }
-

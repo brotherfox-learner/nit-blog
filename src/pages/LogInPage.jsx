@@ -1,7 +1,12 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
 import { NavBar } from "../components/layout";
+import { useFormStyles } from "../hooks";
 
 export default function LogInPage() {
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -13,25 +18,20 @@ export default function LogInPage() {
     },
   });
 
+  // ใช้ useFormStyles hook แทน duplicate styles
+  const { getInputClassName, labelStyles, errorStyles, submitButtonStyles } = useFormStyles();
+
   const onSubmit = (data) => {
     console.log("Form submitted:", data);
   };
 
-  // Reusable input styles
-  const inputBaseStyles =
-    "w-full px-4 py-3 bg-white border rounded-lg text-[#1a1a1a] placeholder-[#9CA3AF] focus:outline-none focus:ring-1 transition-all duration-200";
-  const inputNormalStyles =
-    "border-[#E5E5E5] focus:border-[#26231E] focus:ring-[#26231E]";
-  const inputErrorStyles =
-    "border-red-500 focus:border-red-500 focus:ring-red-500";
-
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* NavBar */}
       <NavBar />
       {/* Main */}
       <main className="flex-1 flex justify-center px-4 py-12">
-        <section className="flex flex-col justify-between h-[50vh] min-h-[448px] min-w-[350px] w-[65vw] bg-[#EFEEEB] rounded-2xl py-[5vh] px-[5vw] max-w-[798px]">
+        <section className="flex flex-col justify-between min-h-[50vh] min-w-[350px] w-[65vw] bg-[#EFEEEB] rounded-2xl py-[5vh] px-[5vw] max-w-[798px]">
           {/* Log In Form Title */}
           <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-8">
             Log in
@@ -45,7 +45,7 @@ export default function LogInPage() {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="email"
-                className="text-sm font-medium text-[#1a1a1a]"
+                className={labelStyles}
               >
                 Email
               </label>
@@ -54,9 +54,7 @@ export default function LogInPage() {
                 type="email"
                 id="email"
                 placeholder="Enter your email address"
-                className={`${inputBaseStyles} ${
-                  errors.email ? inputErrorStyles : inputNormalStyles
-                }`}
+                className={getInputClassName(errors.email)}
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
@@ -67,7 +65,7 @@ export default function LogInPage() {
               />
               {/* Email Input Field Error */}
               {errors.email && (
-                <span className="text-red-500 text-xs mt-1">
+                <span className={errorStyles}>
                   {errors.email.message}
                 </span>
               )}
@@ -77,34 +75,46 @@ export default function LogInPage() {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="password"
-                className="text-sm font-medium text-[#1a1a1a]"
+                className={labelStyles}
               >
                 Password
               </label>
               {/* Password Input Field */}
-              <input
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-                className={`${inputBaseStyles} ${
-                  errors.password ? inputErrorStyles : inputNormalStyles
-                }`}
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters",
-                  },
-                  pattern: {
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-                    message:
-                      "Password must contain uppercase, lowercase, and number",
-                  },
-                })}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="Enter your password"
+                  className={`${getInputClassName(errors.password)} pr-12`}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                    pattern: {
+                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+                      message:
+                        "Password must contain uppercase, lowercase, and number",
+                    },
+                  })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="size-5" />
+                  ) : (
+                    <Eye className="size-5" />
+                  )}
+                </button>
+              </div>
               {/* Password Input Field Error */}
               {errors.password && (
-                <span className="text-red-500 text-xs mt-1">
+                <span className={errorStyles}>
                   {errors.password.message}
                 </span>
               )}
@@ -114,7 +124,7 @@ export default function LogInPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-[160px] mx-auto mt-4 py-3 bg-[#26231E] text-white font-semibold rounded-full hover:bg-[#3a362e] transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className={submitButtonStyles}
             >
               {isSubmitting ? "Logging in..." : "Log in"}
             </button>

@@ -37,3 +37,4 @@ export default function AuthorCard({ author, bio }) {
   );
 }
 
+//เอาไป Render ใน ArticleContent.jsx

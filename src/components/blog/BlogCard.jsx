@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import authorPic from "@/assets/images/Author-main-pic.jpg";
+import { Link } from "react-router-dom";
 
 // Reusable components
 import {
@@ -18,6 +19,7 @@ import {
 import { BLOG_DEFAULTS } from "@/constants/design";
 
 export function BlogCard({
+  postId,
   image = BLOG_DEFAULTS.image,
   category = BLOG_DEFAULTS.category,
   title = BLOG_DEFAULTS.title,
@@ -56,8 +58,8 @@ export function BlogCard({
       <AmbientGlow color="green" />
 
       {/* Nav link ไปยัง Blog Post : Image Container */}
-      <a
-        href="/article"
+      <Link
+        to={`/article/${postId}`}
         className="relative w-[343px] min-[1024px]:w-full h-[64%] overflow-hidden rounded-2xl block group/image"
       >
         {/* รูปภาพหลักภายใน Card: Main Image */}
@@ -77,23 +79,23 @@ export function BlogCard({
 
         {/* ป้ายเวลาประมาณในการอ่าน Blog: Reading Time Badge - Top Left (show on hover) */}
         <div className="absolute top-2 left-2">
-          <ReadTimeBadge minutes={readTime} showOnHover={true} />
+          <ReadTimeBadge minutes={readTime} />
         </div>
 
         {/* ป้ายหมวดหมู่ของ Blog: Category Badge - Top Right */}
         <div className="absolute top-4 right-2">
           <CategoryBadge category={category} />
         </div>
-      </a>
+      </Link>
 
       {/* ส่วนเนื้อหาของ Blog: Content Container */}
       <section className="flex flex-col box-border gap-3 relative w-full">
         {/* หัวข้อของ Blog: Title */}
-        <a href="#" className="group/title">
+        <Link to={`/article/${postId}`} className="group/title">
           <h2 className="text-start font-bold text-xl leading-tight overflow-hidden line-clamp-2 text-gray-900 transition-colors duration-300 group-hover/title:text-emerald-600">
             {title}
           </h2>
-        </a>
+        </Link>
 
         {/* เนื้อหาย่อของ Blog: Description */}
         <p className="text-[#75716B] text-sm leading-relaxed line-clamp-2 h-[44px] transition-all duration-500 group-hover:text-[#43403B]">

@@ -1,16 +1,13 @@
-import { articleData, articleSections } from "../../data/articleData";
+// ArticleContent.jsx ส่วนเนื้อหาของบทความ
+
 import ArticleHero from "./components/ArticleHero";
 import ArticleBody from "./components/ArticleBody";
 import AuthorCard from "./components/AuthorCard";
-import SocialShare from "./SocialShare";
+import SocialShareSection from "./SocialShareSection";
 import { calculateReadTime } from "../../lib/utils";
 import ScrollProgress from "./components/ScrollProgress";
 
-export default function ArticleContent() {
-  const readTime = calculateReadTime(
-    articleSections.map((section) => section.content).join(" ")
-  );
-
+export default function ArticleContent({ articleData }) {
   return (
     <>
       <ScrollProgress />
@@ -21,7 +18,7 @@ export default function ArticleContent() {
           category={articleData.category}
           title={articleData.title}
           date={articleData.date}
-          readTime={readTime}
+          readTime={calculateReadTime(articleData.content)}
         />
 
         {/* Article Content */}
@@ -29,12 +26,16 @@ export default function ArticleContent() {
           <article className="lg:w-[80%] max-w-[815px] xl:max-w-[1000px] px-4 md:px-6 py-8 md:py-[20px]">
             <ArticleBody
               description={articleData.description}
-              sections={articleSections}
+              content={articleData.content}
+              category={articleData.category}
             />
 
             {/* Social Share Section - Hidden on lg and above */}
             <div className="max-lg:hidden mt-[48px]">
-              <SocialShare reactions={321} rounded={true} />
+              <SocialShareSection 
+                reactions={321} 
+                rounded={true} 
+              />
             </div>
           </article>
 
@@ -44,7 +45,9 @@ export default function ArticleContent() {
 
         {/* Social Share Section - Full Width, Show on lg and above */}
         <div className="lg:hidden w-full mt-[48px]">
-          <SocialShare reactions={321} />
+          <SocialShareSection 
+            reactions={321} 
+          />
         </div>
       </main>
     </>

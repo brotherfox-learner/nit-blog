@@ -5,7 +5,7 @@
  */
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 const AUTH_BUTTON_VARIANTS = {
   primary: {

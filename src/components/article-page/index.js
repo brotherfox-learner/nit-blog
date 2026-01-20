@@ -1,6 +1,6 @@
 // Main exports for article page components
 export { default as ArticleContent } from "./ArticleContent";
-export { default as SocialShare } from "./SocialShare";
+export { default as SocialShare } from "./SocialShareSection";
 export { default as CommentSection } from "./CommentSection";
 
 // Sub-components exports
