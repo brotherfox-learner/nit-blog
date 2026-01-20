@@ -1,7 +1,21 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
-export function DeleteArticleDialog({ open, onOpenChange, onConfirm, articleTitle }) {
+/**
+ * Reusable confirmation dialog component
+ * Follows SRP - single responsibility for confirmation dialogs
+ * Follows DRY - reusable for any confirmation action
+ */
+export function ConfirmationDialog({
+  open,
+  onOpenChange,
+  onConfirm,
+  title,
+  message,
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
+  variant = "default", // "default" | "destructive"
+}) {
   if (!open) return null;
 
   return (
@@ -25,12 +39,8 @@ export function DeleteArticleDialog({ open, onOpenChange, onConfirm, articleTitl
 
         {/* Content */}
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Delete article
-          </h2>
-          <p className="text-sm text-gray-600 mb-6">
-            Do you want to delete this article?
-          </p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">{title}</h2>
+          <p className="text-sm text-gray-600 mb-6">{message}</p>
 
           {/* Actions */}
           <div className="flex gap-3 justify-center">
@@ -39,13 +49,18 @@ export function DeleteArticleDialog({ open, onOpenChange, onConfirm, articleTitl
               onClick={() => onOpenChange(false)}
               className="px-8 rounded-full"
             >
-              Cancel
+              {cancelLabel}
             </Button>
             <Button
               onClick={onConfirm}
-              className="px-8 bg-black hover:bg-gray-800 text-white rounded-full"
+              variant={variant === "destructive" ? "destructive" : "default"}
+              className={`px-8 rounded-full ${
+                variant === "destructive"
+                  ? "bg-black hover:bg-gray-800 text-white"
+                  : ""
+              }`}
             >
-              Delete
+              {confirmLabel}
             </Button>
           </div>
         </div>

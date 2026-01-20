@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -9,46 +8,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ImageIcon, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import { useArticleForm } from "@/hooks/useArticleForm";
+import { ImageUpload } from "../shared/ImageUpload";
 
 const categories = ["Cat", "General", "Inspiration", "Technology", "Lifestyle"];
 
-export function CreateArticle({ onBack, initialData }) {
-  const [formData, setFormData] = useState({
-    thumbnailImage: null,
-    category: "",
-    authorName: "Thompson P.",
-    title: "",
-    introduction: "",
-    content: "",
-  });
-
-  const [thumbnailPreview, setThumbnailPreview] = useState(null);
-
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        ...formData,
-        category: initialData.category || "",
-        title: initialData.title || "",
-        // For dummy data simulation, we might not have all fields in initialData
-        // but normally we would populate them here
-      });
-      // specific logic if we had thumbnail url in initialData
-    }
-  }, [initialData]);
-
-  const handleThumbnailUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData({ ...formData, thumbnailImage: file });
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setThumbnailPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+/**
+ * CreateArticle - Form component for creating/editing articles
+ * Follows SRP - single responsibility for article form
+ * Uses hook for form state management (loose coupling)
+ */
+export function CreateArticle({ onBack, initialData, onDelete }) {
+  const isEditMode = !!initialData;
+  const {
+    formData,
+    thumbnailPreview,
+    updateField,
+    handleThumbnailUpload,
+  } = useArticleForm(initialData);
 
   const handleSaveAsDraft = () => {
     console.log("Save as draft:", formData);
@@ -61,25 +39,28 @@ export function CreateArticle({ onBack, initialData }) {
   };
 
   const handleDeleteArticle = () => {
-    console.log("Delete article");
-    // TODO: Implement delete logic
+    if (onDelete) {
+      onDelete();
+    }
   };
-
-  const isEditMode = !!initialData;
 
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Create article</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">
+          {isEditMode ? "Edit article" : "Create article"}
+        </h1>
         <div className="flex gap-3">
-          <Button
-            variant="outline"
-            onClick={handleSaveAsDraft}
-            className="rounded-full px-6"
-          >
-            Save as draft
-          </Button>
+          {!isEditMode && (
+            <Button
+              variant="outline"
+              onClick={handleSaveAsDraft}
+              className="rounded-full px-6 border-gray-300"
+            >
+              Save as draft
+            </Button>
+          )}
           <Button
             onClick={handleSaveAndPublish}
             className="bg-black hover:bg-gray-800 text-white rounded-full px-6"
@@ -96,41 +77,11 @@ export function CreateArticle({ onBack, initialData }) {
           <Label className="text-sm font-medium text-gray-700 mb-2 block">
             Thumbnail image
           </Label>
-          <div className="flex items-start gap-4">
-            <div className="w-72 h-40 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center border border-gray-200 relative">
-              {thumbnailPreview || (isEditMode && initialData?.thumbnailUrl) ? (
-                <img
-                  src={thumbnailPreview || initialData?.thumbnailUrl || "/placeholder.svg"} 
-                  // In a real app, initialData would have a valid URL.
-                  // For this dummy demo, if we don't have a real URL, we might want to show a placeholder or just the icon if no preview.
-                  // Let's assume for this specific simulated "edit" flow (pic 2) there is an image.
-                  // But since we don't have real images in dummy data, I will just stick to the upload behavior
-                  // or if it's the specific dummy item, maybe hardcode a cat image for demo?
-                  // For now, let's keep it simple: if preview exists, show it.
-                  alt="Thumbnail preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <ImageIcon className="size-12 text-gray-400" />
-              )}
-            </div>
-            <div>
-              <input
-                type="file"
-                id="thumbnail-upload"
-                accept="image/*"
-                onChange={handleThumbnailUpload}
-                className="hidden"
-              />
-              <Button
-                variant="outline"
-                onClick={() => document.getElementById("thumbnail-upload").click()}
-                className="rounded-full px-6"
-              >
-                Upload thumbnail image
-              </Button>
-            </div>
-          </div>
+          <ImageUpload
+            preview={thumbnailPreview}
+            onUpload={handleThumbnailUpload}
+            label="Upload thumbnail image"
+          />
         </div>
 
         {/* Category */}
@@ -140,9 +91,7 @@ export function CreateArticle({ onBack, initialData }) {
           </Label>
           <Select
             value={formData.category}
-            onValueChange={(value) =>
-              setFormData({ ...formData, category: value })
-            }
+            onValueChange={(value) => updateField("category", value)}
           >
             <SelectTrigger className="w-full max-w-md bg-white">
               <SelectValue placeholder="Select category" />
@@ -164,9 +113,7 @@ export function CreateArticle({ onBack, initialData }) {
           </Label>
           <Input
             value={formData.authorName}
-            onChange={(e) =>
-              setFormData({ ...formData, authorName: e.target.value })
-            }
+            onChange={(e) => updateField("authorName", e.target.value)}
             className="w-full max-w-md bg-gray-50 text-gray-400"
             disabled
           />
@@ -179,9 +126,7 @@ export function CreateArticle({ onBack, initialData }) {
           </Label>
           <Input
             value={formData.title}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
+            onChange={(e) => updateField("title", e.target.value)}
             placeholder="Article title"
             className="w-full bg-white"
           />
@@ -194,9 +139,7 @@ export function CreateArticle({ onBack, initialData }) {
           </Label>
           <textarea
             value={formData.introduction}
-            onChange={(e) =>
-              setFormData({ ...formData, introduction: e.target.value })
-            }
+            onChange={(e) => updateField("introduction", e.target.value)}
             placeholder="Introduction"
             maxLength={120}
             rows={4}
@@ -211,9 +154,7 @@ export function CreateArticle({ onBack, initialData }) {
           </Label>
           <textarea
             value={formData.content}
-            onChange={(e) =>
-              setFormData({ ...formData, content: e.target.value })
-            }
+            onChange={(e) => updateField("content", e.target.value)}
             placeholder="Content"
             rows={12}
             className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"

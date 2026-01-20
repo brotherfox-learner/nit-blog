@@ -1,11 +1,11 @@
 import { FileText, Folder, User, Bell, Lock, ExternalLink, LogOut } from "lucide-react";
 
 const menuItems = [
-  { id: "article", label: "Article management", icon: FileText, path: "/admin" },
-  { id: "category", label: "Category management", icon: Folder, path: "/admin/category" },
-  { id: "profile", label: "Profile", icon: User, path: "/admin/profile" },
-  { id: "notification", label: "Notification", icon: Bell, path: "/admin/notification" },
-  { id: "reset", label: "Reset password", icon: Lock, path: "/admin/reset-password" },
+  { id: "article", label: "Article management", icon: FileText },
+  { id: "category", label: "Category management", icon: Folder },
+  { id: "profile", label: "Profile", icon: User },
+  { id: "notification", label: "Notification", icon: Bell },
+  { id: "reset", label: "Reset password", icon: Lock },
 ];
 
 const footerItems = [
@@ -13,9 +13,21 @@ const footerItems = [
   { id: "logout", label: "Log out", icon: LogOut, path: "/login" },
 ];
 
-export function AdminSidebar({ activeItem = "article" }) {
+/**
+ * AdminSidebar - Navigation sidebar component
+ * Follows SRP - single responsibility for navigation
+ * Uses loose coupling - communicates via onNavigate callback
+ */
+export function AdminSidebar({ activeItem = "article", onNavigate }) {
+  const handleMenuClick = (e, itemId) => {
+    e.preventDefault();
+    if (onNavigate) {
+      onNavigate(itemId);
+    }
+  };
+
   return (
-    <aside className="w-64 bg-gray-100 h-screen flex flex-col fixed left-0 top-0">
+    <aside className="w-64 bg-[#F5F5F0] h-screen flex flex-col fixed left-0 top-0">
       {/* Header */}
       <header className="p-6 border-b border-gray-200">
         <div className="text-2xl font-semibold text-gray-800 mb-1">hh.</div>
@@ -28,18 +40,18 @@ export function AdminSidebar({ activeItem = "article" }) {
           const Icon = item.icon;
           const isActive = activeItem === item.id;
           return (
-            <a
+            <button
               key={item.id}
-              href={item.path}
-              className={`flex items-center gap-3 px-6 py-3 mx-2 rounded-lg transition-colors ${
+              onClick={(e) => handleMenuClick(e, item.id)}
+              className={`w-full flex items-center gap-3 px-6 py-3 mx-2 rounded-lg transition-colors ${
                 isActive
                   ? "bg-gray-200 text-gray-900 font-medium"
-                  : "text-gray-700 hover:bg-gray-50"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <Icon className="size-5" />
               <span className="text-sm">{item.label}</span>
-            </a>
+            </button>
           );
         })}
       </nav>
@@ -52,7 +64,7 @@ export function AdminSidebar({ activeItem = "article" }) {
             <a
               key={item.id}
               href={item.path}
-              className="flex items-center gap-3 px-6 py-3 mx-2 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 px-6 py-3 mx-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
             >
               <Icon className="size-5" />
               <span className="text-sm">{item.label}</span>

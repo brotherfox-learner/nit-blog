@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { SearchBox } from "@/components/common/SearchBox";
 import {
   Select,
@@ -8,9 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Pencil, Trash2, Plus } from "lucide-react";
-import { DeleteArticleDialog } from "./DeleteArticleDialog";
-import { CreateArticle } from "./CreateArticle";
+import { Plus } from "lucide-react";
+import { useArticleFilters } from "@/hooks/useArticleFilters";
+import { ArticleTable } from "../shared/ArticleTable";
+import { ConfirmationDialog } from "../shared/ConfirmationDialog";
 
 // Dummy data for demonstration
 const dummyArticles = [
@@ -52,39 +53,28 @@ const dummyArticles = [
   },
 ];
 
-const categories = ["All", "Cat", "General", "Inspiration"];
-const statuses = ["All", "Published", "Draft"];
+const categories = ["Category", "Cat", "General", "Inspiration"];
+const statuses = ["Status", "Published", "Draft"];
 
-export function ArticleManagement() {
-  /* 
-    State for view management: 'list' | 'create' | 'edit' 
-  */
-  const [view, setView] = useState("list");
-  const [selectedArticle, setSelectedArticle] = useState(null);
-  
-  // State for articles data
-  const [articles, setArticles] = useState(dummyArticles);
-  
-  // State for filters and search
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedStatus, setSelectedStatus] = useState("All");
-  
-  // State for delete dialog
+/**
+ * ArticleManagement - List view component
+ * Follows SRP - only responsible for displaying the article list
+ * Uses hooks for filtering logic (loose coupling)
+ */
+export function ArticleManagement({ onEdit, onCreate }) {
+  const [articles] = useState(dummyArticles);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState(null);
 
-  // Filter articles based on search and filters
-  const filteredArticles = articles.filter((article) => {
-    const matchesSearch = article.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "All" || article.category === selectedCategory;
-    const matchesStatus =
-      selectedStatus === "All" || article.status === selectedStatus;
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    setSelectedCategory,
+    selectedStatus,
+    setSelectedStatus,
+    filteredArticles,
+  } = useArticleFilters(articles);
 
   const handleDeleteClick = (article) => {
     setArticleToDelete(article);
@@ -93,45 +83,34 @@ export function ArticleManagement() {
 
   const handleDeleteConfirm = () => {
     if (articleToDelete) {
-      setArticles(articles.filter((a) => a.id !== articleToDelete.id));
+      // TODO: Implement actual delete logic
+      console.log("Delete article:", articleToDelete.id);
       setDeleteDialogOpen(false);
       setArticleToDelete(null);
     }
   };
 
   const handleEditClick = (article) => {
-    setSelectedArticle(article);
-    setView("edit");
+    if (onEdit) {
+      onEdit(article);
+    }
   };
 
-  const handleCreateArticle = () => {
-    setSelectedArticle(null);
-    setView("create");
+  const handleCreateClick = () => {
+    if (onCreate) {
+      onCreate();
+    }
   };
-
-  const handleBackToList = () => {
-    setView("list");
-    setSelectedArticle(null);
-  };
-
-  if (view === "create" || view === "edit") {
-    return (
-      <CreateArticle 
-        onBack={handleBackToList} 
-        initialData={view === "edit" ? selectedArticle : null} 
-      />
-    );
-  }
 
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-10">
         <h1 className="text-2xl font-semibold text-gray-900">
           Article management
         </h1>
         <Button
-          onClick={handleCreateArticle}
+          onClick={handleCreateClick}
           className="bg-black hover:bg-gray-800 text-white rounded-full px-6 flex items-center gap-2"
         >
           <Plus className="size-4" />
@@ -140,7 +119,7 @@ export function ArticleManagement() {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex gap-4 mb-6 mx-15">
         <div className="flex-1">
           <SearchBox
             placeholder="Search..."
@@ -148,18 +127,18 @@ export function ArticleManagement() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            {statuses.map((status) => (
-              <SelectItem key={status} value={status}>
-                {status}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              {statuses.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="Category" />
@@ -175,67 +154,21 @@ export function ArticleManagement() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        {/* Table Header */}
-        <div className="grid grid-cols-[1fr,auto,auto,auto] gap-4 px-6 py-3 bg-gray-50 border-b border-gray-200">
-          <div className="text-sm font-medium text-gray-700">Article title</div>
-          <div className="text-sm font-medium text-gray-700 w-32">Category</div>
-          <div className="text-sm font-medium text-gray-700 w-32">Status</div>
-          <div className="w-20"></div>
-        </div>
-
-        {/* Table Body */}
-        <div className="divide-y divide-gray-200">
-          {filteredArticles.length === 0 ? (
-            <div className="px-6 py-8 text-center text-gray-500">
-              No articles found
-            </div>
-          ) : (
-            filteredArticles.map((article) => (
-              <div
-                key={article.id}
-                className="grid grid-cols-[1fr,auto,auto,auto] gap-4 px-6 py-4 hover:bg-gray-50 transition-colors items-center"
-              >
-                <div className="text-sm text-gray-900 truncate">
-                  {article.title}
-                </div>
-                <div className="text-sm text-gray-700 w-32">
-                  {article.category}
-                </div>
-                <div className="w-32">
-                  <span className="inline-flex items-center gap-1.5 text-sm text-green-600">
-                    <span className="size-1.5 rounded-full bg-green-600"></span>
-                    {article.status}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 w-20">
-                  <button
-                    onClick={() => handleEditClick(article)}
-                    className="p-1.5 hover:bg-gray-100 rounded transition-colors"
-                    aria-label="Edit article"
-                  >
-                    <Pencil className="size-4 text-gray-600" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteClick(article)}
-                    className="p-1.5 hover:bg-gray-100 rounded transition-colors"
-                    aria-label="Delete article"
-                  >
-                    <Trash2 className="size-4 text-gray-600" />
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+      <ArticleTable
+        articles={filteredArticles}
+        onEdit={handleEditClick}
+        onDelete={handleDeleteClick}
+      />
 
       {/* Delete Dialog */}
-      <DeleteArticleDialog
+      <ConfirmationDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleDeleteConfirm}
-        articleTitle={articleToDelete?.title}
+        title="Delete article"
+        message="Do you want to delete this article?"
+        confirmLabel="Delete"
+        variant="destructive"
       />
     </div>
   );
