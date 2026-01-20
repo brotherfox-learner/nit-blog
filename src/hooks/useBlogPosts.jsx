@@ -14,12 +14,12 @@ export function useBlogPosts({
   searchQuery = "", 
   limit = 6 
 } = {}) {
-  const [posts, setPosts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isFetchingMore, setIsFetchingMore] = useState(false);
-  const [hasMoreData, setHasMoreData] = useState(true);
-  const [error, setError] = useState(null);
+  const [posts, setPosts] = useState([]); // ข้อมูลบทความ
+  const [page, setPage] = useState(1); // หน้าที่ต้องการแสดง
+  const [isLoading, setIsLoading] = useState(true); // ตรวจสอบการ loading
+  const [isFetchingMore, setIsFetchingMore] = useState(false); // ตรวจสอบการ fetch เพิ่ม
+  const [hasMoreData, setHasMoreData] = useState(true); // ตรวจสอบการมีข้อมูลเหลือให้ fetch หรือไม่
+  const [error, setError] = useState(null); // ตรวจสอบการ error
 
   // แปลง category value สำหรับ API (All -> empty string)
   const apiCategory = category === "All" ? "" : category;

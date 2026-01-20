@@ -1,4 +1,5 @@
-import { useSocialShare, useAuth } from "../../hooks";
+import { useSocialShare } from "../../hooks";
+import { useAuth } from "../../contexts";
 import ReactionButton from "./components/ReactionButton";
 import CopyLinkButton from "./components/CopyLinkButton";
 import SocialMediaButtons from "./components/SocialMediaButtons";

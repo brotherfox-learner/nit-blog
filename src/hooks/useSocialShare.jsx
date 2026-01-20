@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useToast } from "./useToast";
+import { useToast } from "../contexts/ToastContext";
 
 // Social media share URLs
 const SHARE_URLS = {

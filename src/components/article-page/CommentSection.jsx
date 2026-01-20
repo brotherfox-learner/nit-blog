@@ -1,6 +1,7 @@
 import avatarImage from "../../assets/images/Author-main-pic.jpg";
 import catImage from "../../assets/images/Dummy Cute Animal Pic/Cat.jpg";
-import { useComments, useAuth } from "../../hooks";
+import { useComments } from "../../hooks";
+import { useAuth } from "../../contexts";
 import CommentForm from "./components/CommentForm";
 import Comment from "./components/Comment";
 

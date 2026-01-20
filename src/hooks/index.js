@@ -5,7 +5,7 @@
  */
 
 // Authentication
-export { AuthProvider, useAuth } from './useAuth.jsx';
+export { AuthProvider, useAuth } from '../contexts/AuthContext';
 
 // Popups
 export { usePopups } from './usePopups.jsx';
@@ -26,7 +26,7 @@ export { useBlogPosts } from './useBlogPosts.jsx';
 export { useFormStyles, FORM_STYLES } from './useFormStyles.jsx';
 
 // Toast
-export { ToastProvider, useToast } from './useToast.jsx';
+export { ToastProvider, useToast } from '../contexts/ToastContext';
 
 // Search
 export { useSearch } from './useSearch.jsx';
