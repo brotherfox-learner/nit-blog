@@ -27,6 +27,7 @@ import { CATEGORIES } from "@/constants/design";
  */
 
 export default function ArticleSearchBar({
+  id,
   searchQuery,
   onSearchChange,
   onKeyDown,
@@ -42,7 +43,10 @@ export default function ArticleSearchBar({
   closeSuggestions,
 }) {
   return (
-    <section className="flex flex-col gap-[16px] py-[16px] min-[1280px]:px-[120px] min-[1280px]:h-[144px] group/section">
+    <section
+      id={id}
+      className="flex flex-col gap-[16px] py-[16px] min-[1280px]:px-[120px] min-[1280px]:h-[144px] group/section"
+    >
       {/* หัวข้อของ Blog: Section Title with Sparkle Effect */}
       <h2 className="font-semibold text-[24px] leading-[32px] text-[#26231E] pl-[16px] min-[1280px]:pl-0 transition-all duration-500 group-hover/section:translate-x-1">
         Latest articles

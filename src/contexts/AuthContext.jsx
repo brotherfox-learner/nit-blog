@@ -6,11 +6,19 @@ const AuthContext = createContext();
 /**
  * AuthProvider - จัดการ state ของ authentication และ login popup
  * ใช้แทน prop drilling ของ isLoggedIn, openLoginPopup
+ * รองรับ role-based access (admin, user)
  */
 export function AuthProvider({ children }) {
-  // Auth state - ไว้เปลี่ยนเป็น actual authentication logic ภายหลัง
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  // Auth state - โหลดจาก localStorage ถ้ามี
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return !!savedUser;
+  });
+  
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   
   // Login popup state
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
@@ -19,11 +27,15 @@ export function AuthProvider({ children }) {
   const login = useCallback((userData) => {
     setUser(userData);
     setIsLoggedIn(true);
+    // บันทึกลง localStorage
+    localStorage.setItem("user", JSON.stringify(userData));
   }, []);
 
   const logout = useCallback(() => {
     setUser(null);
     setIsLoggedIn(false);
+    // ลบออกจาก localStorage
+    localStorage.removeItem("user");
   }, []);
 
   // Popup actions
@@ -45,6 +57,15 @@ export function AuthProvider({ children }) {
     return true;
   }, [isLoggedIn, openLoginPopup]);
 
+  // Helper function สำหรับเช็ค role
+  const hasRole = useCallback((role) => {
+    return user?.role === role;
+  }, [user]);
+
+  const isAdmin = useCallback(() => {
+    return user?.role === "admin";
+  }, [user]);
+
   const value = {
     // Auth state
     isLoggedIn,
@@ -60,6 +81,8 @@ export function AuthProvider({ children }) {
     closeLoginPopup,
     // Helper
     requireAuth,
+    hasRole,
+    isAdmin,
   };
 
   return (

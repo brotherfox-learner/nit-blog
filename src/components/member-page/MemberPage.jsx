@@ -56,26 +56,9 @@ const MemberPage = () => {
   return (
     <div className="min-h-screen bg-[#f5f5f5] font-sans">
       {/* Desktop Header */}
+
       <Header />
-      <header className="hidden lg:flex justify-between items-center px-12 py-4 bg-white border-b border-[#e0e0e0]">
-        <h1 className="text-2xl font-semibold text-[#333] m-0">hh.</h1>
-        <div className="flex items-center gap-6">
-          <button className="bg-transparent border-none cursor-pointer p-2 text-[#666] transition-colors duration-300 hover:text-[#333]">
-            <Bell size={20} />
-          </button>
-          <div className="flex items-center gap-3 cursor-pointer px-4 py-2 rounded-full transition-colors duration-300 hover:bg-[#f5f5f5]">
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-[#ddd]">
-              {profileImage ? (
-                <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-[#667eea] to-[#764ba2]"></div>
-              )}
-            </div>
-            <span className="text-[0.95rem] font-medium text-[#333]">{formData.name}</span>
-            <ChevronDown size={16} />
-          </div>
-        </div>
-      </header>
+      
 
       {/* Mobile Header */}
       <header className="flex lg:hidden justify-between items-center px-6 py-4 bg-[#f5f5f5]">

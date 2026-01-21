@@ -2,32 +2,10 @@
  * Notification - Notification list component
  * Follows SRP - single responsibility for displaying notifications
  */
+import { notificationDummy } from "../../../data/notificationDummy";
+
 export function Notification() {
-  // Dummy data for demonstration
-  const notifications = [
-    {
-      id: 1,
-      user: {
-        name: "Jacob Lash",
-        avatar: null, // In real app, this would be a URL
-      },
-      type: "comment",
-      articleTitle: "The Fascinating World of Cats: Why We Love Our Furry Friends",
-      comment:
-        "I loved this article! It really explains why my cat is so independent yet loving. The purring section was super interesting.",
-      timestamp: "4 hours ago",
-    },
-    {
-      id: 2,
-      user: {
-        name: "Jacob Lash",
-        avatar: null,
-      },
-      type: "like",
-      articleTitle: "The Fascinating World of Cats: Why We Love Our Furry Friends",
-      timestamp: "4 hours ago",
-    },
-  ];
+
 
   const getNotificationText = (notification) => {
     if (notification.type === "comment") {
@@ -57,7 +35,7 @@ export function Notification() {
 
       {/* Notifications List */}
       <div className="space-y-0 divide-y divide-gray-200">
-        {notifications.map((notification) => (
+        {notificationDummy.map((notification) => (
           <div
             key={notification.id}
             className="py-4 flex items-start gap-4 hover:bg-gray-50 transition-colors"

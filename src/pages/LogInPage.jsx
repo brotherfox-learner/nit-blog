@@ -3,9 +3,15 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { NavBar } from "../components/layout";
 import { useFormStyles } from "../hooks";
+import { dummyAccount } from "../data/dummyAccount";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LogInPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -21,8 +27,25 @@ export default function LogInPage() {
   // ใช้ useFormStyles hook แทน duplicate styles
   const { getInputClassName, labelStyles, errorStyles, submitButtonStyles } = useFormStyles();
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (data) => {
+    setLoginError("");
+    
+    // ค้นหา user จาก dummyAccount
+    const foundUser = dummyAccount.find(
+      (account) => account.email === data.email && account.password === data.password
+    );
+
+    if (foundUser) {
+      // Login สำเร็จ - เก็บข้อมูล user (ไม่เก็บ password)
+      const { password, ...userWithoutPassword } = foundUser;
+      login(userWithoutPassword);
+      
+      // Redirect ไปที่ landing page
+      navigate("/");
+    } else {
+      // Login ไม่สำเร็จ
+      setLoginError("Invalid email or password");
+    }
   };
 
   return (
@@ -88,15 +111,6 @@ export default function LogInPage() {
                   className={`${getInputClassName(errors.password)} pr-12`}
                   {...register("password", {
                     required: "Password is required",
-                    minLength: {
-                      value: 8,
-                      message: "Password must be at least 8 characters",
-                    },
-                    pattern: {
-                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-                      message:
-                        "Password must contain uppercase, lowercase, and number",
-                    },
                   })}
                 />
                 <button
@@ -119,6 +133,13 @@ export default function LogInPage() {
                 </span>
               )}
             </div>
+
+            {/* Login Error Message */}
+            {loginError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {loginError}
+              </div>
+            )}
 
             {/* Log In Button */}
             <button

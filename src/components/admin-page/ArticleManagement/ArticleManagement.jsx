@@ -25,7 +25,7 @@ const dummyArticles = [
     id: 2,
     title: "The Fascinating World of Cats: Why We Love Our Furry Friends",
     category: "Cat",
-    status: "Published",
+    status: "Draft",
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ const dummyArticles = [
     id: 5,
     title: "Top 10 Health Tips to Keep Your Cat Happy and Healthy",
     category: "Cat",
-    status: "Published",
+    status: "Draft",
   },
   {
     id: 6,
