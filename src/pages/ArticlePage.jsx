@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useArticle, useAuth } from "../hooks";
 import avatarImage from "../assets/images/Author-main-pic.jpg";
 import LoginAlertDialog from "../components/article-page/components/LoginAlertDialog";
-
+import LoadingPage from "../components/common/LoadingPage";
 export default function ArticlePage() {
   const { postId } = useParams();
   
@@ -15,7 +15,7 @@ export default function ArticlePage() {
   // ใช้ useAuth context แทน prop drilling
   const { isLoginPopupOpen, setIsLoginPopupOpen } = useAuth();
   
-  if (isLoading || !post) return <div>Loading...</div>;
+  if (isLoading || !post) return <LoadingPage />;
   
   return (
     <div className="bg-[#F9F8F6]">
