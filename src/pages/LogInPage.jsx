@@ -163,6 +163,20 @@ export default function LogInPage() {
               </a>
             </p>
           </div>
+          {/* <div className="">
+            <p className="text-center text-sm text-[#6B7280] mt-7 flex gap-[12px] justify-center">
+              <div>
+              <span> Demo User Account: </span>
+              <span> Email: user@gmail.com </span>
+              <span> Password: User123 </span>
+              </div>
+              <div>
+              <span> Demo Admin Account: </span>
+                <span> Email: admin@gmail.com </span>
+                <span> Password: Admin123 </span>
+              </div>
+            </p>
+          </div> */}
         </section>
       </main>
 
