@@ -1,106 +1,150 @@
-import {createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
+import { supabase } from "../lib/supabase";
 
-// สร้าง Context สำหรับ Authentication
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
-/**
- * AuthProvider - จัดการ state ของ authentication และ login popup
- * ใช้แทน prop drilling ของ isLoggedIn, openLoginPopup
- * รองรับ role-based access (admin, user)
- */
 export function AuthProvider({ children }) {
-  // Auth state - โหลดจาก localStorage ถ้ามี
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return !!savedUser;
-  });
-  
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-  
+  // Supabase session/user
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   // Login popup state
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
-  // Auth actions
-  const login = useCallback((userData) => {
-    setUser(userData);
-    setIsLoggedIn(true);
-    // บันทึกลง localStorage
-    localStorage.setItem("user", JSON.stringify(userData));
+  // (optional) profile from table users/profiles (has role)
+  const [profile, setProfile] = useState(null);
+
+  // Bootstrap session + listen changes
+  useEffect(() => {
+    let mounted = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return;
+      setSession(data.session ?? null);
+      setLoading(false);
+    });
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+    });
+
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
-  const logout = useCallback(() => {
-    setUser(null);
-    setIsLoggedIn(false);
-    // ลบออกจาก localStorage
-    localStorage.removeItem("user");
-  }, []);
+  const user = session?.user ?? null;
+  const isLoggedIn = !!user;
 
-  // Popup actions
-  const openLoginPopup = useCallback(() => {
-    setIsLoginPopupOpen(true);
-  }, []);
+  // 2) ดึง profile จาก table users (ที่มี role) เมื่อ login
+  useEffect(() => {
+    const run = async () => {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
 
-  const closeLoginPopup = useCallback(() => {
-    setIsLoginPopupOpen(false);
-  }, []);
+      // สมมติ table ชื่อ users และใช้ id = auth user id (uuid)
+      const { data, error } = await supabase
+        .from("users")
+        .select("id, username, name, role, profile_pic")
+        .eq("id", user.id)
+        .maybeSingle();
 
-  // Helper function สำหรับ actions ที่ต้องการ login
-  const requireAuth = useCallback((action) => {
-    if (!isLoggedIn) {
-      openLoginPopup();
-      return false;
-    }
-    if (action) action();
-    return true;
-  }, [isLoggedIn, openLoginPopup]);
+      if (error) {
+        // ไม่ throw เพื่อไม่ให้ app crash
+        setProfile(null);
+        return;
+      }
+      setProfile(data ?? null);
+    };
 
-  // Helper function สำหรับเช็ค role
-  const hasRole = useCallback((role) => {
-    return user?.role === role;
+    run();
   }, [user]);
 
-  const isAdmin = useCallback(() => {
-    return user?.role === "admin";
-  }, [user]);
+  // Auth actions (Supabase)
+  const signUp = useCallback(async ({ email, password }) => {
+    return await supabase.auth.signUp({ email, password });
+  }, []);
 
-  const value = {
-    // Auth state
-    isLoggedIn,
-    user,
-    // Auth actions
-    login,
-    logout,
-    // Popup state
-    isLoginPopupOpen,
-    setIsLoginPopupOpen,
-    // Popup actions
-    openLoginPopup,
-    closeLoginPopup,
-    // Helper
-    requireAuth,
-    hasRole,
-    isAdmin,
-  };
+  const signIn = useCallback(async ({ email, password }) => {
+    return await supabase.auth.signInWithPassword({ email, password });
+  }, []);
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+  const signOut = useCallback(async () => {
+    await supabase.auth.signOut();
+  }, []);
+
+  // Popup actions (ของเดิม)
+  const openLoginPopup = useCallback(() => setIsLoginPopupOpen(true), []);
+  const closeLoginPopup = useCallback(() => setIsLoginPopupOpen(false), []);
+
+  // Helper function สำหรับ actions ที่ต้องการ login (ของเดิม)
+  const requireAuth = useCallback(
+    (action) => {
+      if (!isLoggedIn) {
+        openLoginPopup();
+        return false;
+      }
+      if (action) action();
+      return true;
+    },
+    [isLoggedIn, openLoginPopup]
   );
+
+  // Role helpers (ใช้ profile แทน localStorage user)
+  const hasRole = useCallback((role) => profile?.role === role, [profile]);
+  const isAdmin = useCallback(() => profile?.role === "admin", [profile]);
+
+  const value = useMemo(
+    () => ({
+      // state
+      loading,
+      session,
+      user,          // auth user (มี email)
+      profile,       // app user (มี role/username)
+      isLoggedIn,
+
+      // auth actions
+      signUp,
+      signIn,
+      signOut,
+
+      // popup
+      isLoginPopupOpen,
+      setIsLoginPopupOpen,
+      openLoginPopup,
+      closeLoginPopup,
+
+      // helpers
+      requireAuth,
+      hasRole,
+      isAdmin,
+    }),
+    [
+      loading,
+      session,
+      user,
+      profile,
+      isLoggedIn,
+      signUp,
+      signIn,
+      signOut,
+      isLoginPopupOpen,
+      openLoginPopup,
+      closeLoginPopup,
+      requireAuth,
+      hasRole,
+      isAdmin,
+    ]
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-/**
- * useAuth - Custom hook สำหรับเข้าถึง auth context
- * @returns {Object} Auth context value
- * @throws {Error} ถ้าใช้นอก AuthProvider
- */
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
+  return ctx;
 }

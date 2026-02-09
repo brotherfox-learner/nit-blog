@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { User, Key, Bell, Camera, Check, X, Eye, EyeOff, Shield, Mail, AtSign, Activity, FileText, Heart, MessageCircle, Clock, BookOpen, Globe, Moon, Zap, Settings, Trash2 } from 'lucide-react';
 import Header from '../layout/NavBar';
+import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../lib/supabase";
 
 // Dummy notification data
 const notificationDummy = [
@@ -53,7 +55,8 @@ const notificationDummy = [
   },
 ];
 
-const MemberPage = () => {
+export default function MemberPageComponent() {
+  const { user, profile } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [profileImage, setProfileImage] = useState(null);
   const [notifications, setNotifications] = useState(notificationDummy);
@@ -65,21 +68,39 @@ const MemberPage = () => {
   const [saveStatus, setSaveStatus] = useState(null);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [formData, setFormData] = useState({
-    name: 'Moodeng ja',
-    username: 'moodeng.cute',
-    email: 'moodeng.cute@gmail.com',
-    bio: '',
+    name: "",
+    username: "",
+    email: "",
+    bio: "",
     notifications: true,
-    language: 'en',
-    theme: 'light',
-    autoSave: true
+    language: "en",
+    theme: "light",
+    autoSave: true,
   });
+  const [formError, setFormError] = useState(null);
+
+  // Set form data when profile changes
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      name: profile?.name ?? "",
+      username: profile?.username ?? "",
+      email: user?.email ?? "",
+      bio: profile?.bio ?? "",
+    }));
+  }, [profile, user]);
+
+  // Set profile image when profile changes
+  useEffect(() => {
+    setProfileImage(profile?.profile_pic ?? null);
+  }, [profile]);
+
+
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
-
   // Mock activity data
   const activityStats = {
     postsCount: 42,
@@ -123,7 +144,7 @@ const MemberPage = () => {
       ...prev,
       [name]: value
     }));
-    
+
     if (name === 'newPassword') {
       setPasswordStrength(calculatePasswordStrength(value));
     }
@@ -136,13 +157,54 @@ const MemberPage = () => {
     }));
   };
 
-  const handleSave = () => {
-    setSaveStatus('saving');
-    setTimeout(() => {
-      setSaveStatus('success');
+  const withTimeout = (promise, ms = 12000) =>
+    Promise.race([
+      promise,
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timeout")), ms)
+      ),
+    ]);
+  
+  const handleSave = async () => {
+    setSaveStatus("saving");
+    setFormError(null);
+  
+    try {
+      const payload = {
+        name: formData.name.trim(),
+        username: formData.username.trim(),
+        profile_pic: profileImage ?? null,
+      };
+  
+      const { data, error } = await withTimeout(
+        supabase
+          .from("users")
+          .update(payload)
+          .eq("id", user.id)
+          .select("id, name, username, profile_pic, role")
+          .single()
+      );
+  
+      if (error) {
+        // username ซ้ำ (unique constraint)
+        if (error.code === "23505") {
+          throw new Error("This username is already taken.");
+        }
+        throw error;
+      }
+  
+      // (optional) ถ้าคุณอยาก sync profile ทันที
+      // setProfile(data);
+  
+      setSaveStatus("success");
       setTimeout(() => setSaveStatus(null), 2000);
-    }, 1000);
+    } catch (err) {
+      console.error("Save profile error:", err);
+      setFormError(err.message || "Unable to save changes. Please try again.");
+      setSaveStatus(null);
+    }
   };
+
 
   const handleResetPassword = () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -185,7 +247,7 @@ const MemberPage = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const handleMarkAsRead = (id) => {
-    setNotifications(notifications.map(n => 
+    setNotifications(notifications.map(n =>
       n.id === id ? { ...n, read: true } : n
     ));
   };
@@ -241,33 +303,30 @@ const MemberPage = () => {
 
           <nav className="flex flex-col gap-2 px-4 mb-6">
             <button
-              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${
-                activeTab === 'profile'
-                  ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
+              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${activeTab === 'profile'
+                ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
               onClick={() => setActiveTab('profile')}
             >
               <User size={18} className={`${activeTab === 'profile' ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'} transition-opacity`} />
               <span>Profile Settings</span>
             </button>
             <button
-              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${
-                activeTab === 'activity'
-                  ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
+              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${activeTab === 'activity'
+                ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
               onClick={() => setActiveTab('activity')}
             >
               <Activity size={18} className={`${activeTab === 'activity' ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'} transition-opacity`} />
               <span>Activity & Stats</span>
             </button>
             <button
-              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${
-                activeTab === 'notifications'
-                  ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
+              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${activeTab === 'notifications'
+                ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
               onClick={() => setActiveTab('notifications')}
             >
               <div className="relative">
@@ -281,22 +340,20 @@ const MemberPage = () => {
               <span>Notifications</span>
             </button>
             <button
-              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${
-                activeTab === 'preferences'
-                  ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
+              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${activeTab === 'preferences'
+                ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
               onClick={() => setActiveTab('preferences')}
             >
               <Settings size={18} className={`${activeTab === 'preferences' ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'} transition-opacity`} />
               <span>Preferences</span>
             </button>
             <button
-              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${
-                activeTab === 'security'
-                  ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
+              className={`flex items-center gap-3 px-4 py-3.5 bg-transparent border-none text-[0.95rem] cursor-pointer rounded-xl transition-all duration-300 text-left group ${activeTab === 'security'
+                ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-semibold shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
               onClick={() => setActiveTab('security')}
             >
               <Key size={18} className={`${activeTab === 'security' ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'} transition-opacity`} />
@@ -348,33 +405,30 @@ const MemberPage = () => {
         {/* Mobile Tabs */}
         <div className="flex lg:hidden gap-0 px-4 mb-6 border-b border-slate-200 bg-white/90 backdrop-blur-lg overflow-x-auto">
           <button
-            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${
-              activeTab === 'profile'
-                ? 'text-indigo-600 border-b-indigo-600'
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
+            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${activeTab === 'profile'
+              ? 'text-indigo-600 border-b-indigo-600'
+              : 'text-slate-500 hover:text-slate-700'
+              }`}
             onClick={() => setActiveTab('profile')}
           >
             <User size={20} className={activeTab === 'profile' ? 'opacity-100' : 'opacity-70'} />
             <span className="hidden sm:inline">Profile</span>
           </button>
           <button
-            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${
-              activeTab === 'activity'
-                ? 'text-indigo-600 border-b-indigo-600'
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
+            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${activeTab === 'activity'
+              ? 'text-indigo-600 border-b-indigo-600'
+              : 'text-slate-500 hover:text-slate-700'
+              }`}
             onClick={() => setActiveTab('activity')}
           >
             <Activity size={20} className={activeTab === 'activity' ? 'opacity-100' : 'opacity-70'} />
             <span className="hidden sm:inline">Activity</span>
           </button>
           <button
-            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${
-              activeTab === 'notifications'
-                ? 'text-indigo-600 border-b-indigo-600'
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
+            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${activeTab === 'notifications'
+              ? 'text-indigo-600 border-b-indigo-600'
+              : 'text-slate-500 hover:text-slate-700'
+              }`}
             onClick={() => setActiveTab('notifications')}
           >
             <div className="relative">
@@ -388,22 +442,20 @@ const MemberPage = () => {
             <span className="hidden sm:inline">Notif</span>
           </button>
           <button
-            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${
-              activeTab === 'preferences'
-                ? 'text-indigo-600 border-b-indigo-600'
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
+            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${activeTab === 'preferences'
+              ? 'text-indigo-600 border-b-indigo-600'
+              : 'text-slate-500 hover:text-slate-700'
+              }`}
             onClick={() => setActiveTab('preferences')}
           >
             <Settings size={20} className={activeTab === 'preferences' ? 'opacity-100' : 'opacity-70'} />
             <span className="hidden sm:inline">Settings</span>
           </button>
           <button
-            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${
-              activeTab === 'security'
-                ? 'text-indigo-600 border-b-indigo-600'
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
+            className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${activeTab === 'security'
+              ? 'text-indigo-600 border-b-indigo-600'
+              : 'text-slate-500 hover:text-slate-700'
+              }`}
             onClick={() => setActiveTab('security')}
           >
             <Key size={20} className={activeTab === 'security' ? 'opacity-100' : 'opacity-70'} />
@@ -484,6 +536,12 @@ const MemberPage = () => {
                       className="px-4 py-3.5 border-2 border-slate-200 rounded-xl text-base text-slate-800 bg-white transition-all duration-300 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 placeholder:text-slate-400 hover:border-slate-300"
                     />
                   </div>
+                  {formError && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {formError}
+                    </p>
+                  )}
+
 
                   <div className="flex flex-col gap-2">
                     <label htmlFor="email" className="text-sm text-slate-700 font-semibold flex items-center gap-2">
@@ -699,9 +757,8 @@ const MemberPage = () => {
                     notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className={`group relative bg-white border rounded-2xl p-5 transition-all duration-200 hover:shadow-md ${
-                          notification.read ? 'border-slate-200' : 'border-indigo-200 bg-gradient-to-r from-indigo-50/50 to-purple-50/50'
-                        }`}
+                        className={`group relative bg-white border rounded-2xl p-5 transition-all duration-200 hover:shadow-md ${notification.read ? 'border-slate-200' : 'border-indigo-200 bg-gradient-to-r from-indigo-50/50 to-purple-50/50'
+                          }`}
                       >
                         {/* Unread Indicator */}
                         {!notification.read && (
@@ -713,11 +770,10 @@ const MemberPage = () => {
                         <div className="flex gap-4">
                           {/* Avatar */}
                           <div className="flex-shrink-0">
-                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm ${
-                              notification.type === 'comment' 
-                                ? 'bg-gradient-to-br from-purple-500 to-pink-500'
-                                : 'bg-gradient-to-br from-indigo-500 to-purple-500'
-                            }`}>
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm ${notification.type === 'comment'
+                              ? 'bg-gradient-to-br from-purple-500 to-pink-500'
+                              : 'bg-gradient-to-br from-indigo-500 to-purple-500'
+                              }`}>
                               {notification.user.avatar ? (
                                 <img src={notification.user.avatar} alt={notification.user.name} className="w-full h-full object-cover rounded-full" />
                               ) : (
@@ -987,18 +1043,16 @@ const MemberPage = () => {
                           {[1, 2, 3, 4].map((level) => (
                             <div
                               key={level}
-                              className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
-                                level <= passwordStrength ? getPasswordStrengthColor() : 'bg-slate-200'
-                              }`}
+                              className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${level <= passwordStrength ? getPasswordStrengthColor() : 'bg-slate-200'
+                                }`}
                             />
                           ))}
                         </div>
-                        <p className={`text-xs font-medium ${
-                          passwordStrength === 1 ? 'text-red-600' :
+                        <p className={`text-xs font-medium ${passwordStrength === 1 ? 'text-red-600' :
                           passwordStrength === 2 ? 'text-orange-600' :
-                          passwordStrength === 3 ? 'text-yellow-600' :
-                          'text-green-600'
-                        }`}>
+                            passwordStrength === 3 ? 'text-yellow-600' :
+                              'text-green-600'
+                          }`}>
                           {getPasswordStrengthText() && `Password strength: ${getPasswordStrengthText()}`}
                         </p>
                       </div>
@@ -1072,5 +1126,3 @@ const MemberPage = () => {
     </div>
   );
 };
-
-export default MemberPage;

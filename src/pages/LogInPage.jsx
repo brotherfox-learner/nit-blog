@@ -3,14 +3,16 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { NavBar } from "../components/layout";
 import { useFormStyles } from "../hooks";
-import { dummyAccount } from "../data/dummyAccount";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+
 
 export default function LogInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
-  const { login } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -27,26 +29,23 @@ export default function LogInPage() {
   // ใช้ useFormStyles hook แทน duplicate styles
   const { getInputClassName, labelStyles, errorStyles, submitButtonStyles } = useFormStyles();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (formData) => {
     setLoginError("");
-    
-    // ค้นหา user จาก dummyAccount
-    const foundUser = dummyAccount.find(
-      (account) => account.email === data.email && account.password === data.password
-    );
-
-    if (foundUser) {
-      // Login สำเร็จ - เก็บข้อมูล user (ไม่เก็บ password)
-      const { password, ...userWithoutPassword } = foundUser;
-      login(userWithoutPassword);
-      
-      // Redirect ไปที่ landing page
-      navigate("/");
-    } else {
-      // Login ไม่สำเร็จ
+    const { error } = await signIn({
+      email: formData.email,
+      password: formData.password,
+    });
+    if (error) {
       setLoginError("Invalid email or password");
+      return;
     }
+    navigate("/");
   };
+
+  // ไม่สามารถเข้าถึงหน้า Login ได้หลังจาก login สำเร็จ
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+  navigate(from, { replace: true });
 
   return (
     <div className="flex flex-col">

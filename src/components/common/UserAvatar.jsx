@@ -3,7 +3,6 @@ import { User, LogOut, UserCircle, Shield, Home, FileText, Info, Bell } from "lu
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { notificationDummy } from "@/data/notificationDummy";
-
 /**
  * UserAvatar - Component สำหรับแสดง avatar และ dropdown menu
  * แสดงเมื่อ user login แล้ว
@@ -12,8 +11,9 @@ export function UserAvatar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const { user, logout, isAdmin } = useAuth();
+  const { user, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
+  
 
   // Close dropdown เมื่อคลิกข้างนอก
   useEffect(() => {
@@ -33,8 +33,8 @@ export function UserAvatar() {
     };
   }, [isOpen, isNotificationsOpen]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut();
     setIsOpen(false);
     navigate("/");
   };

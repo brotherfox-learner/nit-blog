@@ -7,7 +7,7 @@ import { useSearch } from "../hooks";
 
 export default function LandingPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
-
+  
   // ใช้ useSearch hook - blog list จะ fetch เฉพาะเมื่อ searchQuery เปลี่ยน
   const {
     inputValue,

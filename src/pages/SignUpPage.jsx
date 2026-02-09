@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { NavBar } from "../components/layout";
 import { useFormStyles } from "../hooks";
+import { supabase } from "../lib/supabase";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,8 +24,28 @@ export default function SignUpPage() {
   // ใช้ useFormStyles hook แทน duplicate styles
   const { getInputClassName, labelStyles, errorStyles, submitButtonStyles } = useFormStyles();
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (formData) => {
+    const { name, username, email, password } = formData;
+  
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+          username,
+        },
+      },
+    });
+  
+    if (error) {
+      console.log("Sign up error:", error.message);
+      // ตรงนี้ค่อยปรับเป็น toast / setError ภายหลังได้
+      return;
+    }
+  
+    console.log("Sign up success:", data);
+    // ถ้าคุณเปิด email confirmation: อาจต้องบอก user ไปเช็คอีเมล
   };
 
   return (
