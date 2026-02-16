@@ -186,8 +186,8 @@ export const CATEGORIES = [
     },
   },
   {
-    label: "Cat",
-    value: "Cat",
+    label: "Technology",
+    value: "Technology",
     colors: {
       text: "text-white",
       active:
