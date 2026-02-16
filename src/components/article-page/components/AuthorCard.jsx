@@ -1,7 +1,7 @@
 export default function AuthorCard({ author, bio }) {
   return (
-    <section className="max-lg:flex max-lg:flex-col max-lg:justify-center items-center">
-      <div className="min-w-[343px] lg:min-w-[370px] xl:min-w-[400px] w-[80vw] lg:max-w-[20vw] mx-0 px-4 md:px-6 my-5 lg:py-[15px] lg:sticky top-[15px]">
+    <aside className="max-lg:flex max-lg:flex-col max-lg:justify-center max-lg:items-center lg:w-[370px] xl:w-[400px] lg:flex-shrink-0">
+      <div className="w-full max-w-[343px] lg:max-w-none px-4 md:px-6 my-5 lg:my-0 lg:sticky top-[20px]">
         <footer className="p-6 md:p-8 min-h-[376px] bg-[#EFEEEB] rounded-2xl">
           <section className="flex flex-col gap-6">
             {/* Author Info */}
@@ -33,7 +33,7 @@ export default function AuthorCard({ author, bio }) {
           </section>
         </footer>
       </div>
-    </section>
+    </aside>
   );
 }
 

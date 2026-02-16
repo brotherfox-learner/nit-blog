@@ -131,7 +131,7 @@ export const ARTICLECONTENT_COLORS = {
     bodyText: "text-slate-700",
     accent: "blue",
   },
-  Cat: {
+  Technology: {
     // Amber/Orange theme
     descriptionBorder: "border-amber-400",
     headingBorder: "border-amber-300",
@@ -157,18 +157,21 @@ export const ARTICLECONTENT_COLORS = {
   },
 };
 
+// Highlight style ใช้เป็น default สำหรับ category ที่ไม่มีใน design
+export const HIGHLIGHT_STYLE = {
+  text: "text-white",
+  active:
+    "bg-gradient-to-r from-[#12B279] to-[#0fa06b] shadow-[#12B279]/30",
+  hoverBg: "hover:bg-gradient-to-r hover:from-[#12B279] hover:to-[#0fa06b]",
+  hoverText: "hover:text-white",
+  hoverShadow: "hover:shadow-lg hover:shadow-[#12B279]/30",
+};
+
 export const CATEGORIES = [
   {
     label: "Highlight",
     value: "All",
-    colors: {
-      text: "text-white",
-      active:
-        "bg-gradient-to-r from-[#12B279] to-[#0fa06b] shadow-[#12B279]/30",
-      hoverBg: "hover:bg-gradient-to-r hover:from-[#12B279] hover:to-[#0fa06b]",
-      hoverText: "hover:text-white",
-      hoverShadow: "hover:shadow-lg hover:shadow-[#12B279]/30",
-    },
+    colors: HIGHLIGHT_STYLE,
   },
   {
     label: "General",
@@ -183,8 +186,8 @@ export const CATEGORIES = [
     },
   },
   {
-    label: "Cat",
-    value: "Cat",
+    label: "Technology",
+    value: "Technology",
     colors: {
       text: "text-white",
       active:
@@ -207,3 +210,29 @@ export const CATEGORIES = [
     },
   },
 ];
+
+/**
+ * Map API categories (จาก fetchCategories) เป็น format พร้อม colors
+ * ถ้า label ตรงกับ CATEGORIES ใน design ใช้ style นั้น ถ้าไม่ตรงใช้ HIGHLIGHT_STYLE
+ * @param {Array<{id: number, name: string}>} apiCategories - categories จาก API
+ * @returns {Array<{label: string, value: string, colors: object}>}
+ */
+export const mapCategoriesWithStyles = (apiCategories = []) => {
+  const styleByLabel = Object.fromEntries(
+    CATEGORIES.map((c) => [c.label, c.colors])
+  );
+
+  const highlightOption = {
+    label: "Highlight",
+    value: "All",
+    colors: HIGHLIGHT_STYLE,
+  };
+
+  const mapped = (apiCategories || []).map((cat) => ({
+    label: cat.name,
+    value: cat.name,
+    colors: styleByLabel[cat.name] ?? HIGHLIGHT_STYLE,
+  }));
+
+  return [highlightOption, ...mapped];
+};

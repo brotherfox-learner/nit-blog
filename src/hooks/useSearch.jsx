@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { debounce } from "lodash";
 import { fetchBlogPostQuery } from "../data/fetchBlogPost";
+import {getPosts} from "../api/postsAPI";
 
 /**
  * useSearch - จัดการ search พร้อม autocomplete
@@ -30,8 +31,8 @@ export function useSearch({
 
         try {
             setIsLoadingSuggestions(true);
-            const data = await fetchBlogPostQuery(1, autocompleteLimit, "", keyword);
-            setSuggestions(data || []);
+            const data = await getPosts({ page: 1, limit: autocompleteLimit, keyword: keyword });
+            setSuggestions(data.posts || []);
         } catch (error) {
             console.error("Error fetching suggestions:", error);
             setSuggestions([]);

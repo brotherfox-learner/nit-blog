@@ -14,6 +14,8 @@ export { LabelInput } from './LabelInput';
 export { Spinner } from './Spinner';
 export { Toast } from './Toast';
 export { SearchBoxWithAutocomplete } from './SearchBoxWithAutocomplete';
+export { UserAvatar } from './UserAvatar';
+export { ProtectedRoute, AdminRoute, MemberRoute } from './ProtectedRoute';
 
 // Badge Components
 export { Badge, CategoryBadge, ReadTimeBadge } from './Badge';

@@ -7,7 +7,7 @@ import { useSearch } from "../hooks";
 
 export default function LandingPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
-
+  
   // ใช้ useSearch hook - blog list จะ fetch เฉพาะเมื่อ searchQuery เปลี่ยน
   const {
     inputValue,
@@ -29,7 +29,7 @@ export default function LandingPage() {
   };
 
   return (
-    <main>
+    <main >
       {/* NavBar */}
       <NavBar />
 
@@ -38,6 +38,7 @@ export default function LandingPage() {
 
       {/* ArticleSearchBar */}
       <ArticleSearchBar
+        id="landing-page-article-search-bar"
         searchQuery={inputValue}
         onSearchChange={handleInputChange}
         onKeyDown={handleKeyDown}

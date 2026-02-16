@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   SelectBar,
   ShimmerEffect,
@@ -6,7 +7,8 @@ import {
 } from "@/components/common";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES } from "@/constants/design";
+import { mapCategoriesWithStyles } from "@/constants/design";
+import { fetchCategories } from "@/api/categoryAPI";
 
 /**
  * ArticleSearchBar - ส่วนการค้นหา & ป้ายหมวดหมู่ของ Blog
@@ -27,6 +29,7 @@ import { CATEGORIES } from "@/constants/design";
  */
 
 export default function ArticleSearchBar({
+  id,
   searchQuery,
   onSearchChange,
   onKeyDown,
@@ -41,8 +44,29 @@ export default function ArticleSearchBar({
   onSearchFocus,
   closeSuggestions,
 }) {
+  const [categories, setCategories] = useState(() => mapCategoriesWithStyles([]));
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchCategories()
+      .then((apiCategories) => {
+        if (!cancelled) {
+          setCategories(mapCategoriesWithStyles(apiCategories));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCategories(mapCategoriesWithStyles([]));
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
+
   return (
-    <section className="flex flex-col gap-[16px] py-[16px] min-[1280px]:px-[120px] min-[1280px]:h-[144px] group/section">
+    <section
+      id={id}
+      className="flex flex-col gap-[16px] py-[16px] min-[1280px]:px-[120px] min-[1280px]:h-[144px] group/section"
+    >
       {/* หัวข้อของ Blog: Section Title with Sparkle Effect */}
       <h2 className="font-semibold text-[24px] leading-[32px] text-[#26231E] pl-[16px] min-[1280px]:pl-0 transition-all duration-500 group-hover/section:translate-x-1">
         Latest articles
@@ -75,14 +99,14 @@ export default function ArticleSearchBar({
 
         {/*Mobile กล่องเลือกหมวดหมู่ของ Blog: Category Select */}
         <MobileCategorySelect
-          categories={CATEGORIES}
+          categories={categories}
           value={selectedCategory}
           onCategoryChange={onCategoryChange}
         />
 
         {/*Desktop ป้ายหมวดหมู่ของ Blog: Category Buttons */}
         <DesktopCategoryButtons
-          categories={CATEGORIES}
+          categories={categories}
           selectedCategory={selectedCategory}
           onCategoryChange={onCategoryChange}
         />

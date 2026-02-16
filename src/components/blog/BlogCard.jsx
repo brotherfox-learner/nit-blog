@@ -24,14 +24,15 @@ export function BlogCard({
   category = BLOG_DEFAULTS.category,
   title = BLOG_DEFAULTS.title,
   description = BLOG_DEFAULTS.description,
-  author = BLOG_DEFAULTS.author,
+  author ,
   date = BLOG_DEFAULTS.date,
-  src = authorPic,
+  imageSrc,
   loading = BLOG_DEFAULTS.loading,
-  readTime = BLOG_DEFAULTS.readTime,
+  readTime,
   objectPosition = BLOG_DEFAULTS.objectPosition,
   className = "",
 }) {
+
   return (
     <article
       className={cn(
@@ -112,7 +113,7 @@ export function BlogCard({
         <AuthorInfo
           author={author}
           date={date}
-          imageSrc={src}
+          imageSrc={imageSrc}
           size="sm"
           showVerified={true}
           layout="inline"

@@ -3,9 +3,15 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { NavBar } from "../components/layout";
 import { useFormStyles } from "../hooks";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function LogInPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const { signIn, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -21,9 +27,23 @@ export default function LogInPage() {
   // ใช้ useFormStyles hook แทน duplicate styles
   const { getInputClassName, labelStyles, errorStyles, submitButtonStyles } = useFormStyles();
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (formData) => {
+    setLoginError("");
+    const { error } = await signIn({
+      email: formData.email,
+      password: formData.password,
+    });
+    if (error) {
+      setLoginError("Invalid email or password");
+      return;
+    }
+    navigate("/");
   };
+
+  // ไม่สามารถเข้าถึงหน้า Login ได้หลังจาก login สำเร็จ
+  if (isLoggedIn) {
+    navigate("/");
+    }
 
   return (
     <div className="flex flex-col">
@@ -88,15 +108,6 @@ export default function LogInPage() {
                   className={`${getInputClassName(errors.password)} pr-12`}
                   {...register("password", {
                     required: "Password is required",
-                    minLength: {
-                      value: 8,
-                      message: "Password must be at least 8 characters",
-                    },
-                    pattern: {
-                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-                      message:
-                        "Password must contain uppercase, lowercase, and number",
-                    },
                   })}
                 />
                 <button
@@ -120,6 +131,13 @@ export default function LogInPage() {
               )}
             </div>
 
+            {/* Login Error Message */}
+            {loginError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {loginError}
+              </div>
+            )}
+
             {/* Log In Button */}
             <button
               type="submit"
@@ -142,6 +160,20 @@ export default function LogInPage() {
               </a>
             </p>
           </div>
+          {/* <div className="">
+            <p className="text-center text-sm text-[#6B7280] mt-7 flex gap-[12px] justify-center">
+              <div>
+              <span> Demo User Account: </span>
+              <span> Email: user@gmail.com </span>
+              <span> Password: User123 </span>
+              </div>
+              <div>
+              <span> Demo Admin Account: </span>
+                <span> Email: admin@gmail.com </span>
+                <span> Password: Admin123 </span>
+              </div>
+            </p>
+          </div> */}
         </section>
       </main>
 

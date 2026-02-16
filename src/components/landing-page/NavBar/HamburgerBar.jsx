@@ -1,10 +1,14 @@
 import { useState } from "react";
 import SignUpBtn from "./SignUpBtn";
 import LogInBtn from "./LogInBtn";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { User, LogOut, UserCircle, Shield, Home, FileText, Info } from "lucide-react";
 
 export default function HamburgerBar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isLoggedIn, user, profile, logout, isAdmin } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -12,6 +16,17 @@ export default function HamburgerBar() {
 
   const closeMenu = () => {
     setIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    closeMenu();
+    navigate("/");
+  };
+
+  // สร้าง initials จากอีเมล
+  const getInitials = (email) => {
+    return email ? email.charAt(0).toUpperCase() : "U";
   };
 
   return (
@@ -56,30 +71,101 @@ export default function HamburgerBar() {
             : "opacity-0 -translate-y-4 scale-95 pointer-events-none"
           }`}
       >
-        {/* Menu Header */}
-        <div className="bg-[#EFEEEB] px-5 py-4 border-b border-[#DAD6D1]/50">
-          <p className="text-[#26231E] font-semibold text-sm">Welcome!</p>
-          <p className="text-[#75716B] text-xs mt-1">
-            Sign in to access all features
-          </p>
-        </div>
+        {/* Menu Header - แสดงต่างกันตาม login state */}
+        {isLoggedIn ? (
+          <div className="bg-[#EFEEEB] px-5 py-4 border-b border-[#DAD6D1]/50">
+            <div className="flex items-center gap-3">
+              {/* Avatar */}
+              {profile?.profile_pic ? (
+                <img
+                  src={profile.profile_pic}
+                  alt={profile.name || user?.email}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-[#26231E] text-white flex items-center justify-center font-semibold">
+                  {getInitials(user?.email)}
+                </div>
+              )}
+              {/* User Info */}
+              <div className="flex-1 min-w-0">
+                <p className="text-[#26231E] font-semibold text-sm truncate">
+                  {user?.email}
+                </p>
+                <p className="text-[#75716B] text-xs mt-0.5 capitalize">
+                  {profile?.role || user?.role || "user"} account
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-[#EFEEEB] px-5 py-4 border-b border-[#DAD6D1]/50">
+            <p className="text-[#26231E] font-semibold text-sm">Welcome!</p>
+            <p className="text-[#75716B] text-xs mt-1">
+              Sign in to access all features
+            </p>
+          </div>
+        )}
 
         {/* Menu Content */}
         <div className="flex flex-col gap-3 p-5">
-          {/* Auth Buttons */}
-          <div className="flex flex-row justify-center items-center gap-5">
-            <LogInBtn className="w-full justify-center h-11" />
+          {/* Auth Section - แสดงเฉพาะเมื่อยังไม่ login */}
+          {!isLoggedIn && (
+            <>
+              {/* Auth Buttons */}
+              <div className="flex flex-row justify-center items-center gap-5">
+                <LogInBtn className="w-full justify-center h-11" />
+                <SignUpBtn
+                  BtnName="Sign Up"
+                  className="w-full justify-center h-11"
+                />
+              </div>
+              {/* Divider */}
+              <div className="h-px bg-[#DAD6D1]/50 my-2" />
+            </>
+          )}
 
-            <SignUpBtn
-              BtnName="Sign Up"
-              className="w-full justify-center h-11"
-            />
-          </div>
+          {/* User Menu - แสดงเฉพาะเมื่อ login แล้ว */}
+          {isLoggedIn && (
+            <>
+              {/* Admin Panel - แสดงเฉพาะ admin */}
+              {isAdmin() && (
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
+                  onClick={closeMenu}
+                >
+                  <Shield className="w-5 h-5" />
+                  <span className="font-medium text-sm">Admin Panel</span>
+                </Link>
+              )}
 
-          {/* Divider */}
-          <div className="h-px bg-[#DAD6D1]/50 my-2" />
+              {/* Member Page */}
+              <Link
+                to="/member"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
+                onClick={closeMenu}
+              >
+                <UserCircle className="w-5 h-5" />
+                <span className="font-medium text-sm">Member Page</span>
+              </Link>
 
-          {/* Quick Links */}
+              {/* Profile */}
+              <Link
+                to="/member"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
+                onClick={closeMenu}
+              >
+                <User className="w-5 h-5" />
+                <span className="font-medium text-sm">Profile</span>
+              </Link>
+
+              {/* Divider */}
+              <div className="h-px bg-[#DAD6D1]/50 my-2" />
+            </>
+          )}
+
+          {/* Quick Links - แสดงเสมอ */}
           <div className="flex flex-col gap-1">
             {/* Home Link */}
             <Link
@@ -87,64 +173,44 @@ export default function HamburgerBar() {
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
               onClick={closeMenu}
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                />
-              </svg>
+              <Home className="w-5 h-5" />
               <span className="font-medium text-sm">Home</span>
             </Link>
             {/* Articles Link */}
             <Link
-              to="/"
+              to="/#landing-page-article-search-bar"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
               onClick={closeMenu}
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-                />
-              </svg>
+              <FileText className="w-5 h-5" />
               <span className="font-medium text-sm">Articles</span>
             </Link>
             {/* About Link */}
             <Link
-              to="/"
+              to="/about"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
               onClick={closeMenu}
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
+              <Info className="w-5 h-5" />
               <span className="font-medium text-sm">About</span>
             </Link>
           </div>
+
+          {/* Logout Button - แสดงเฉพาะเมื่อ login แล้ว */}
+          {isLoggedIn && (
+            <>
+              {/* Divider */}
+              <div className="h-px bg-[#DAD6D1]/50 my-2" />
+              
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-all duration-200"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="font-medium text-sm">Log out</span>
+              </button>
+            </>
+          )}
         </div>
       </nav>
     </div>
