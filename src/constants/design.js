@@ -131,7 +131,7 @@ export const ARTICLECONTENT_COLORS = {
     bodyText: "text-slate-700",
     accent: "blue",
   },
-  Cat: {
+  Technology: {
     // Amber/Orange theme
     descriptionBorder: "border-amber-400",
     headingBorder: "border-amber-300",
