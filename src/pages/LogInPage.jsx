@@ -7,12 +7,10 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-
-
 export default function LogInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
-  const { signIn } = useAuth();
+  const { signIn, isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -43,9 +41,9 @@ export default function LogInPage() {
   };
 
   // ไม่สามารถเข้าถึงหน้า Login ได้หลังจาก login สำเร็จ
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
-  navigate(from, { replace: true });
+  if (isLoggedIn) {
+    navigate("/");
+    }
 
   return (
     <div className="flex flex-col">

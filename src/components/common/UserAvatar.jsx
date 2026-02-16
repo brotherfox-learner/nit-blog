@@ -11,7 +11,7 @@ export function UserAvatar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const { user, signOut, isAdmin } = useAuth();
+  const { user, profile, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
   
 
@@ -174,7 +174,7 @@ export function UserAvatar() {
             {user.email}
           </p>
           <p className="text-xs text-[#75716B] mt-0.5 capitalize">
-            {user.role} account
+            {profile?.role ?? "user"} account
           </p>
         </div>
 

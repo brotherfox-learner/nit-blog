@@ -1,26 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SearchBox } from "@/components/common/SearchBox";
 import { Plus } from "lucide-react";
 import { CategoryList } from "../shared/CategoryList";
 import { ConfirmationDialog } from "../shared/ConfirmationDialog";
-
-// Dummy data for demonstration
-const dummyCategories = [
-  { id: 1, name: "Cat" },
-  { id: 2, name: "General" },
-  { id: 3, name: "Inspiration" },
-];
+import { fetchCategories, deleteCategory } from "@/api/categoryAPI";
+import { useAuth } from "@/contexts";
 
 /**
  * CategoryManagement - List view component
  * Follows SRP - only responsible for displaying the category list
  */
 export function CategoryManagement({ onEdit, onCreate }) {
-  const [categories] = useState(dummyCategories);
+  const { token, session } = useAuth();
+  const accessToken = token ?? session?.access_token;
+
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
+
+  // Fetch categories from API
+  useEffect(() => {
+    const loadCategories = async () => {
+      setIsLoading(true);
+      try {
+        const data = await fetchCategories();
+        setCategories(data);
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadCategories();
+  }, []);
 
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -31,12 +46,17 @@ export function CategoryManagement({ onEdit, onCreate }) {
     setDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    if (categoryToDelete) {
-      // TODO: Implement actual delete logic
-      console.log("Delete category:", categoryToDelete.id);
-      setDeleteDialogOpen(false);
-      setCategoryToDelete(null);
+  const handleDeleteConfirm = async () => {
+    if (categoryToDelete && accessToken) {
+      try {
+        await deleteCategory(categoryToDelete.id, accessToken);
+        setCategories((prev) => prev.filter((c) => c.id !== categoryToDelete.id));
+        setDeleteDialogOpen(false);
+        setCategoryToDelete(null);
+      } catch (err) {
+        console.error("Failed to delete category:", err);
+        alert("Failed to delete category: " + (err.response?.data?.message || err.message));
+      }
     }
   };
 
@@ -51,6 +71,14 @@ export function CategoryManagement({ onEdit, onCreate }) {
       onCreate();
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full flex items-center justify-center py-20">
+        <div className="text-gray-500">Loading categories...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">

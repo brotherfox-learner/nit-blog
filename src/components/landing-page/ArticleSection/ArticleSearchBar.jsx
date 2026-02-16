@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   SelectBar,
   ShimmerEffect,
@@ -6,7 +7,8 @@ import {
 } from "@/components/common";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES } from "@/constants/design";
+import { mapCategoriesWithStyles } from "@/constants/design";
+import { fetchCategories } from "@/api/categoryAPI";
 
 /**
  * ArticleSearchBar - ส่วนการค้นหา & ป้ายหมวดหมู่ของ Blog
@@ -42,6 +44,24 @@ export default function ArticleSearchBar({
   onSearchFocus,
   closeSuggestions,
 }) {
+  const [categories, setCategories] = useState(() => mapCategoriesWithStyles([]));
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchCategories()
+      .then((apiCategories) => {
+        if (!cancelled) {
+          setCategories(mapCategoriesWithStyles(apiCategories));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCategories(mapCategoriesWithStyles([]));
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
+
   return (
     <section
       id={id}
@@ -79,14 +99,14 @@ export default function ArticleSearchBar({
 
         {/*Mobile กล่องเลือกหมวดหมู่ของ Blog: Category Select */}
         <MobileCategorySelect
-          categories={CATEGORIES}
+          categories={categories}
           value={selectedCategory}
           onCategoryChange={onCategoryChange}
         />
 
         {/*Desktop ป้ายหมวดหมู่ของ Blog: Category Buttons */}
         <DesktopCategoryButtons
-          categories={CATEGORIES}
+          categories={categories}
           selectedCategory={selectedCategory}
           onCategoryChange={onCategoryChange}
         />

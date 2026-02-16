@@ -4,17 +4,20 @@ import ReactionButton from "./components/ReactionButton";
 import CopyLinkButton from "./components/CopyLinkButton";
 import SocialMediaButtons from "./components/SocialMediaButtons";
 
-export default function SocialShareSection({ reactions = 321, rounded }) {
+export default function SocialShareSection({ reactions = 0, hasReacted = false, rounded, onLike, onUnlike }) {
   const { requireAuth } = useAuth();
-  
+
   const {
     copied,
-    reactionCount,
-    hasReacted,
     handleCopyLink,
-    handleReaction,
     shareOnSocial,
   } = useSocialShare(reactions);
+
+  const handleReactionClick = () => {
+    if (!requireAuth()) return;
+    if (hasReacted && onUnlike) onUnlike();
+    else if (!hasReacted && onLike) onLike();
+  };
 
   return (
     <section
@@ -23,11 +26,11 @@ export default function SocialShareSection({ reactions = 321, rounded }) {
       }`}
       aria-label="Social sharing options"
     >
-      {/* Reactions Counter */}
+      {/* Reactions Counter - ต้อง login กดได้, กดอีกครั้ง = unlike */}
       <ReactionButton
-        reactionCount={reactionCount}
+        reactionCount={reactions}
         hasReacted={hasReacted}
-        onClick={() => handleReaction(requireAuth)}
+        onClick={handleReactionClick}
       />
 
       {/* Share Actions */}

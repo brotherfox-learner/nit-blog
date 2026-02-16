@@ -45,12 +45,17 @@ export function useSocialShare(initialReactions = 0) {
   }, [showToast]);
 
   // ควบคุมการกดปุ่ม reaction ของบทความ
-  const handleReaction = useCallback((requireAuth) => {
+  const handleReaction = useCallback((requireAuth, userId) => {
     if (requireAuth && !requireAuth()) {
       return;
     }
     setReactionCount(prev => hasReacted ? prev - 1 : prev + 1);
     setHasReacted(prev => !prev);
+    if (hasReacted) {
+      onUnlike(userId);
+    } else {
+      onLike(userId);
+    }
   }, [hasReacted]);
 
   // แชร์บทความบนโซเชียลมีเดีย

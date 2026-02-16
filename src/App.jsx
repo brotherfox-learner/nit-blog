@@ -22,7 +22,6 @@ function App() {
         <Route path="/article/:postId" element={<ArticlePage />} />
         <Route path="/login" element={<LogInPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-
         {/* Protected Routes - ต้อง login และมี role ที่ถูกต้อง */}
         <Route
           path="/admin"

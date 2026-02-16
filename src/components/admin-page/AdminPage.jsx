@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { AdminSidebar } from "./AdminSidebar";
 import { ArticleManagement } from "./ArticleManagement";
 import { CreateArticle } from "./ArticleManagement";
@@ -8,6 +8,9 @@ import { Profile } from "./Profile";
 import { Notification } from "./Notification";
 import { ResetPassword } from "./ResetPassword";
 import { ConfirmationDialog } from "./shared/ConfirmationDialog";
+import { deletePost } from "@/api/postsAPI";
+import { deleteCategory } from "@/api/categoryAPI";
+import { useAuth } from "@/contexts";
 
 /**
  * AdminPage - Main admin page component that handles navigation
@@ -15,11 +18,19 @@ import { ConfirmationDialog } from "./shared/ConfirmationDialog";
  * Uses loose coupling - components communicate via callbacks
  */
 export function AdminPage() {
+  const { token, session } = useAuth();
+  const accessToken = token ?? session?.access_token;
+
   const [currentView, setCurrentView] = useState("article");
   const [viewMode, setViewMode] = useState("list"); // "list" | "create" | "edit"
   const [selectedItem, setSelectedItem] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0); // Used to trigger re-fetch
+
+  const refreshData = useCallback(() => {
+    setRefreshKey((prev) => prev + 1);
+  }, []);
 
   const handleNavigation = (view) => {
     setCurrentView(view);
@@ -60,17 +71,30 @@ export function AdminPage() {
   const handleBackToList = () => {
     setViewMode("list");
     setSelectedItem(null);
+    refreshData(); // Refresh data when going back to list
   };
 
-  const handleDeleteConfirm = () => {
-    if (itemToDelete) {
-      // TODO: Implement actual delete logic
-      console.log("Delete:", itemToDelete);
+  const handleDeleteConfirm = async () => {
+    if (!itemToDelete || !accessToken) return;
+
+    try {
+      if (itemToDelete.type === "article") {
+        await deletePost(itemToDelete.data.id, accessToken);
+      } else if (itemToDelete.type === "category") {
+        await deleteCategory(itemToDelete.data.id, accessToken);
+      }
+
       setDeleteDialogOpen(false);
       setItemToDelete(null);
+
       if (viewMode === "edit") {
         handleBackToList();
+      } else {
+        refreshData();
       }
+    } catch (err) {
+      console.error("Delete failed:", err);
+      alert("Delete failed: " + (err.response?.data?.message || err.message));
     }
   };
 
@@ -100,6 +124,7 @@ export function AdminPage() {
       }
       return (
         <ArticleManagement
+          key={`articles-${refreshKey}`}
           onCreate={handleArticleCreate}
           onEdit={handleArticleEdit}
         />
@@ -118,6 +143,7 @@ export function AdminPage() {
       }
       return (
         <CategoryManagement
+          key={`categories-${refreshKey}`}
           onCreate={handleCategoryCreate}
           onEdit={handleCategoryEdit}
         />

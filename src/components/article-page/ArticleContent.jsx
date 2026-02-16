@@ -7,7 +7,7 @@ import SocialShareSection from "./SocialShareSection";
 import { calculateReadTime } from "../../lib/utils";
 import ScrollProgress from "./components/ScrollProgress";
 
-export default function ArticleContent({ articleData }) {
+export default function ArticleContent({ articleData, likeCount = 0, hasLiked = false, onLike, onUnlike }) {
   return (
     <>
       <ScrollProgress />
@@ -33,8 +33,11 @@ export default function ArticleContent({ articleData }) {
             {/* Social Share Section - Hidden on lg and above */}
             <div className="max-lg:hidden mt-[48px]">
               <SocialShareSection 
-                reactions={321} 
+                reactions={likeCount} 
+                hasReacted={hasLiked}
                 rounded={true} 
+                onLike={onLike}
+                onUnlike={onUnlike}
               />
             </div>
           </article>
@@ -46,7 +49,10 @@ export default function ArticleContent({ articleData }) {
         {/* Social Share Section - Full Width, Show on lg and above */}
         <div className="lg:hidden w-full mt-[48px]">
           <SocialShareSection 
-            reactions={321} 
+            reactions={likeCount} 
+            hasReacted={hasLiked}
+            onLike={onLike}
+            onUnlike={onUnlike}
           />
         </div>
       </main>

@@ -36,8 +36,8 @@ export function ArticleTable({ articles, onEdit, onDelete }) {
             <div className="text-sm col-span-5 text-gray-900 truncate">{article.title}</div>
             <div className="text-sm col-span-2 text-gray-700 w-32">{article.category}</div>
             <div className="col-span-2 w-32">
-              <span className={`inline-flex items-center gap-1.5 text-sm ${article.status === 'Published' ? 'text-green-600' : 'text-gray-600'}`}>
-                <span className={`size-1.5 rounded-full ${article.status === 'Published' ? 'bg-green-600' : 'bg-gray-600'}`}></span>
+              <span className={`inline-flex items-center gap-1.5 text-sm ${article.status_id === 2 ? 'text-green-600' : 'text-yellow-600'}`}>
+                <span className={`size-1.5 rounded-full ${article.status_id === 2 ? 'bg-green-600' : 'bg-yellow-500'}`}></span>
                 {article.status}
               </span>
             </div>

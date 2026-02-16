@@ -1,12 +1,17 @@
 import axios from 'axios';
 
-const fetchBlogPostQuery = async (page = 1, limit = 6, category = "", keyword = "", postId = "") => {
-    const response = await axios.get(`https://blog-post-project-api.vercel.app/posts?page=${page}&limit=${limit}&category=${category}&keyword=${keyword}`);
-    return response.data.posts;
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
+const fetchBlogPostQuery = async (page = 1, limit = 6, category = "", keyword = "") => {
+    const response = await axios.get(`${API_BASE}/posts`, {
+        params: { page, limit, category, keyword }
+    });
+    // Response อาจเป็น { posts: [...], totalPosts: N } หรือ { posts: [...] }
+    return response.data.posts || response.data;
 };
 
 const fetchBlogPostById = async (postId = "") => {
-    const response = await axios.get(`https://blog-post-project-api.vercel.app/posts/${postId}`);
+    const response = await axios.get(`${API_BASE}/posts/${postId}`);
     return response.data;
 };
 

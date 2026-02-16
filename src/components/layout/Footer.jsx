@@ -5,7 +5,7 @@
 
 import { SocialIcon } from "@/components/common";
 
-export default function Footer() {
+export default function Footer({ onLike, onUnlike }) {
   return (
     <footer className="font-medium flex flex-col items-center justify-between gap-[24px] mt-[48px] py-[40px] bg-[#EFEEEB] min-lg:flex-row min-lg:justify-between min-lg:items-center min-lg:px-[120px] min-lg:py-[60px]">
       <div className="flex items-center gap-6">

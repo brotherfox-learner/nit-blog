@@ -1,10 +1,12 @@
+import { useState, useEffect } from "react";
 import { useBlogPosts } from "../../hooks";
 import { BlogCard } from "./BlogCard";
 import { Spinner } from "../common";
 import { calculateReadTime, formatDate } from "../../lib/utils";
+import { getUserForProfile } from "@/api/usersAPI";
+import { BLOG_DEFAULTS } from "@/constants/design";
 
 export function NewBlogList({ selectedCategory = "All", searchQuery = "", limit = 6 }) {
-  // ใช้ useBlogPosts hook แทน useState + useEffect
   const {
     posts,
     isLoading,
@@ -16,6 +18,23 @@ export function NewBlogList({ selectedCategory = "All", searchQuery = "", limit 
     searchQuery,
     limit,
   });
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getUserForProfile()
+      .then((data) => {
+        if (!cancelled) setUser(data);
+      })
+      .catch(() => {
+        if (!cancelled) setUser(null);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const authorFallback = user?.name ?? BLOG_DEFAULTS.author;
+  const authorPicFallback = user?.profile_pic ?? null;
 
   return (
     <section className="px-[16px] mt-[10px] flex flex-col justify-center items-center gap-[24px] min-[1280px]:px-[120px] min-[1280px]:py-[16px]">
@@ -37,6 +56,8 @@ export function NewBlogList({ selectedCategory = "All", searchQuery = "", limit 
                 description={post.description}
                 date={formatDate(post.date)}
                 readTime={calculateReadTime(post.content)}
+                author={authorFallback}
+                imageSrc={authorPicFallback}
               />
             ))}
           </div>

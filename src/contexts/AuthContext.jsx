@@ -1,7 +1,23 @@
 import { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
+import axios from "axios";
 import { supabase } from "../lib/supabase";
 
 const AuthContext = createContext(null);
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+/**
+ * Server-side Auth Approach:
+ * - signUp / signIn → เรียก server ผ่าน axios (POST /auth/signup, POST /auth/signin)
+ * - server ส่ง session กลับมา → set ลง Supabase client เพื่อให้ auto refresh ทำงาน
+ * - signOut / session management → Supabase client (auto token refresh, onAuthStateChange)
+ * - profile → ได้จาก server response หรือดึงจาก GET /auth/me
+ */
+
+// Helper: สร้าง axios header จาก access_token
+const authHeader = (token) => ({
+  headers: { Authorization: `Bearer ${token}` },
+});
 
 export function AuthProvider({ children }) {
   // Supabase session/user
@@ -11,7 +27,7 @@ export function AuthProvider({ children }) {
   // Login popup state
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
-  // (optional) profile from table users/profiles (has role)
+  // Profile from server (users table - has role, username, bio ฯลฯ)
   const [profile, setProfile] = useState(null);
 
   // Bootstrap session + listen changes
@@ -35,52 +51,102 @@ export function AuthProvider({ children }) {
   }, []);
 
   const user = session?.user ?? null;
+  const token = session?.access_token ?? null;
   const isLoggedIn = !!user;
 
-  // 2) ดึง profile จาก table users (ที่มี role) เมื่อ login
+  // ดึง profile จาก server เมื่อ login (GET /auth/me)
+  const fetchProfile = useCallback(async (accessToken) => {
+    if (!accessToken) {
+      setProfile(null);
+      return;
+    }
+    try {
+      const { data } = await axios.get(`${API_BASE}/auth/me`, authHeader(accessToken));
+      setProfile(data);
+    } catch (err) {
+      console.error("fetchProfile failed:", err.response?.status, err.message);
+      setProfile(null);
+      // ถ้า 401 (token invalid/expired) → sign out เพื่อ clear session เก่า
+      if (err.response?.status === 401) {
+        console.warn("Session invalid, signing out...");
+        await supabase.auth.signOut();
+      }
+    }
+  }, []);
+
   useEffect(() => {
-    const run = async () => {
-      if (!user) {
-        setProfile(null);
-        return;
+    fetchProfile(token);
+  }, [token, fetchProfile]);
+
+  // Auth actions - เรียกผ่าน server แทน Supabase client โดยตรง
+
+  // signUp: POST /auth/signup
+  const signUp = useCallback(async ({ email, password, username, name }) => {
+    try {
+      const { data } = await axios.post(`${API_BASE}/auth/signup`, {
+        email,
+        password,
+        username,
+        name,
+      });
+
+      // ถ้า signUp สำเร็จ + มี session → set session ด้วย Supabase client เพื่อให้ onAuthStateChange ทำงาน
+      if (data.session) {
+        await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        });
+        // profile มาจาก server response แล้ว
+        if (data.profile) {
+          setProfile(data.profile);
+        }
       }
 
-      // สมมติ table ชื่อ users และใช้ id = auth user id (uuid)
-      const { data, error } = await supabase
-        .from("users")
-        .select("id, username, name, role, profile_pic")
-        .eq("id", user.id)
-        .maybeSingle();
-
-      if (error) {
-        // ไม่ throw เพื่อไม่ให้ app crash
-        setProfile(null);
-        return;
-      }
-      setProfile(data ?? null);
-    };
-
-    run();
-  }, [user]);
-
-  // Auth actions (Supabase)
-  const signUp = useCallback(async ({ email, password }) => {
-    return await supabase.auth.signUp({ email, password });
+      return { data, error: null };
+    } catch (err) {
+      const message = err.response?.data?.message || err.message;
+      return { data: null, error: { message } };
+    }
   }, []);
 
+  // signIn: POST /auth/signin
   const signIn = useCallback(async ({ email, password }) => {
-    return await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const { data } = await axios.post(`${API_BASE}/auth/signin`, {
+        email,
+        password,
+      });
+
+      // ถ้า signIn สำเร็จ → set session ด้วย Supabase client เพื่อให้ onAuthStateChange ทำงาน
+      if (data.session) {
+        await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        });
+        // profile มาจาก server response แล้ว
+        if (data.profile) {
+          setProfile(data.profile);
+        }
+      }
+
+      return { data, error: null };
+    } catch (err) {
+      const message = err.response?.data?.message || err.message;
+      return { data: null, error: { message } };
+    }
   }, []);
 
+  // signOut
   const signOut = useCallback(async () => {
+    setProfile(null);
     await supabase.auth.signOut();
   }, []);
 
-  // Popup actions (ของเดิม)
+  // Popup actions
   const openLoginPopup = useCallback(() => setIsLoginPopupOpen(true), []);
   const closeLoginPopup = useCallback(() => setIsLoginPopupOpen(false), []);
 
-  // Helper function สำหรับ actions ที่ต้องการ login (ของเดิม)
+  // Helper: ตรวจสอบว่า login แล้วหรือยัง ถ้ายังเปิด popup
   const requireAuth = useCallback(
     (action) => {
       if (!isLoggedIn) {
@@ -93,7 +159,7 @@ export function AuthProvider({ children }) {
     [isLoggedIn, openLoginPopup]
   );
 
-  // Role helpers (ใช้ profile แทน localStorage user)
+  // Role helpers
   const hasRole = useCallback((role) => profile?.role === role, [profile]);
   const isAdmin = useCallback(() => profile?.role === "admin", [profile]);
 
@@ -102,14 +168,18 @@ export function AuthProvider({ children }) {
       // state
       loading,
       session,
-      user,          // auth user (มี email)
-      profile,       // app user (มี role/username)
+      token,
+      user,            // supabase auth user (มี email, id)
+      profile,         // app user from server (มี role, username, bio)
       isLoggedIn,
 
       // auth actions
       signUp,
       signIn,
       signOut,
+
+      // profile
+      fetchProfile,
 
       // popup
       isLoginPopupOpen,
@@ -125,12 +195,14 @@ export function AuthProvider({ children }) {
     [
       loading,
       session,
+      token,
       user,
       profile,
       isLoggedIn,
       signUp,
       signIn,
       signOut,
+      fetchProfile,
       isLoginPopupOpen,
       openLoginPopup,
       closeLoginPopup,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SearchBox } from "@/components/common/SearchBox";
 import {
@@ -12,48 +12,10 @@ import { Plus } from "lucide-react";
 import { useArticleFilters } from "@/hooks/useArticleFilters";
 import { ArticleTable } from "../shared/ArticleTable";
 import { ConfirmationDialog } from "../shared/ConfirmationDialog";
+import { getPosts, deletePost } from "@/api/postsAPI";
+import { fetchCategories } from "@/api/categoryAPI";
+import { useAuth } from "@/contexts";
 
-// Dummy data for demonstration
-const dummyArticles = [
-  {
-    id: 1,
-    title: "Understanding Cat Behavior: Why Your Feline Friend Acts the Way They D...",
-    category: "Cat",
-    status: "Published",
-  },
-  {
-    id: 2,
-    title: "The Fascinating World of Cats: Why We Love Our Furry Friends",
-    category: "Cat",
-    status: "Draft",
-  },
-  {
-    id: 3,
-    title: "Finding Motivation: How to Stay Inspired Through Life's Challenges",
-    category: "General",
-    status: "Published",
-  },
-  {
-    id: 4,
-    title: "The Science of the Cat's Purr: How It Benefits Cats and Humans Alike",
-    category: "Cat",
-    status: "Published",
-  },
-  {
-    id: 5,
-    title: "Top 10 Health Tips to Keep Your Cat Happy and Healthy",
-    category: "Cat",
-    status: "Draft",
-  },
-  {
-    id: 6,
-    title: "Unlocking Creativity: Simple Habits to Spark Inspiration Daily",
-    category: "Inspiration",
-    status: "Published",
-  },
-];
-
-const categories = ["Category", "Cat", "General", "Inspiration"];
 const statuses = ["Status", "Published", "Draft"];
 
 /**
@@ -62,9 +24,54 @@ const statuses = ["Status", "Published", "Draft"];
  * Uses hooks for filtering logic (loose coupling)
  */
 export function ArticleManagement({ onEdit, onCreate }) {
-  const [articles] = useState(dummyArticles);
+  const { token, session } = useAuth();
+  const accessToken = token ?? session?.access_token;
+
+  const [articles, setArticles] = useState([]);
+  const [categories, setCategories] = useState(["Category"]);
+  const [isLoading, setIsLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState(null);
+
+  // Fetch articles and categories from API
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const [postsRes, categoriesRes] = await Promise.all([
+          getPosts({ limit: 100, all: true }),
+          fetchCategories(),
+        ]);
+
+        // Map posts to article format for the table
+        // Use status_id (number) as source of truth: 1 = Draft, 2 = Published
+        const getStatusLabel = (statusId) => {
+          if (statusId === 2) return "Published";
+          return "Draft"; // default / status_id 1
+        };
+
+        const mappedArticles = (postsRes.posts || postsRes || []).map((post) => ({
+          ...post,
+          id: post.id,
+          title: post.title,
+          category: post.category_name || post.category || "General",
+          status: getStatusLabel(post.status_id),
+        }));
+
+        setArticles(mappedArticles);
+
+        // Build category list for filter
+        const categoryNames = ["Category", ...categoriesRes.map((c) => c.name)];
+        setCategories(categoryNames);
+      } catch (err) {
+        console.error("Failed to fetch articles:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const {
     searchQuery,
@@ -81,12 +88,17 @@ export function ArticleManagement({ onEdit, onCreate }) {
     setDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    if (articleToDelete) {
-      // TODO: Implement actual delete logic
-      console.log("Delete article:", articleToDelete.id);
-      setDeleteDialogOpen(false);
-      setArticleToDelete(null);
+  const handleDeleteConfirm = async () => {
+    if (articleToDelete && accessToken) {
+      try {
+        await deletePost(articleToDelete.id, accessToken);
+        setArticles((prev) => prev.filter((a) => a.id !== articleToDelete.id));
+        setDeleteDialogOpen(false);
+        setArticleToDelete(null);
+      } catch (err) {
+        console.error("Failed to delete article:", err);
+        alert("Failed to delete article: " + (err.response?.data?.message || err.message));
+      }
     }
   };
 
@@ -101,6 +113,14 @@ export function ArticleManagement({ onEdit, onCreate }) {
       onCreate();
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full flex items-center justify-center py-20">
+        <div className="text-gray-500">Loading articles...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">

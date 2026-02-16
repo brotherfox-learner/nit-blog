@@ -104,8 +104,8 @@ const LoadingPage = () => {
         </div>
       </div>
 
-      {/* Add custom animation for loading bar */}
-      <style jsx>{`
+      {/* Inline style for loading bar animation */}
+      <style>{`
         @keyframes loading-bar {
           0% {
             width: 0%;
