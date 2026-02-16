@@ -13,19 +13,32 @@ import SecuritySection from './components/SecuritySection';
 
 // Hooks and utilities
 import { useMemberPage } from './hooks/useMemberPage';
+import { useNotifications } from '@/hooks/useNotifications';
+import { useStatistics } from '@/hooks/useStatistics';
 import { calculatePasswordStrength, getPasswordStrengthColor, getPasswordStrengthText, withTimeout } from './utils/helpers';
 
 export default function MemberPageComponent() {
   const { user, profile, token, fetchProfile } = useAuth();
   
+  // Notifications (real data from API)
+  const {
+    notifications,
+    unreadCount,
+    isLoading: isLoadingNotifications,
+    handleMarkAsRead,
+    handleMarkAllAsRead,
+    handleDeleteNotification,
+  } = useNotifications();
+
+  // Statistics (real data from API)
+  const { activityStats, isLoading: isLoadingStats } = useStatistics();
+
   // Use custom hook for state management
   const {
     activeTab,
     setActiveTab,
     profileImage,
     setProfileImage,
-    notifications,
-    setNotifications,
     showPassword,
     setShowPassword,
     saveStatus,
@@ -38,8 +51,6 @@ export default function MemberPageComponent() {
     setFormError,
     passwordData,
     setPasswordData,
-    activityStats,
-    unreadCount
   } = useMemberPage(user, profile);
 
   // Handler functions
@@ -188,23 +199,6 @@ export default function MemberPageComponent() {
     }
   };
 
-  // ฟังก์ชันการจัดการการทำเครื่องหมายการแจ้งเตือนที่ไม่อ่าน
-  const handleMarkAsRead = (id) => {
-    setNotifications(notifications.map(n =>
-      n.id === id ? { ...n, read: true } : n
-    ));
-  };
-
-  // ฟังก์ชันการจัดการการทำเครื่องหมายการแจ้งเตือนที่ไม่อ่านทั้งหมด
-  const handleMarkAllAsRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, read: true })));
-  };
-
-  // ฟังก์ชันการจัดการการลบการแจ้งเตือน
-  const handleDeleteNotification = (id) => {
-    setNotifications(notifications.filter(n => n.id !== id));
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
       <Header />
@@ -240,13 +234,14 @@ export default function MemberPageComponent() {
             )}
 
             {activeTab === 'activity' && (
-              <ActivitySection activityStats={activityStats} />
+              <ActivitySection activityStats={activityStats} isLoading={isLoadingStats} />
             )}
 
             {activeTab === 'notifications' && (
               <NotificationsSection
                 notifications={notifications}
                 unreadCount={unreadCount}
+                isLoading={isLoadingNotifications}
                 handleMarkAsRead={handleMarkAsRead}
                 handleMarkAllAsRead={handleMarkAllAsRead}
                 handleDeleteNotification={handleDeleteNotification}

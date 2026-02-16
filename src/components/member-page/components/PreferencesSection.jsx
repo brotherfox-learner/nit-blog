@@ -10,7 +10,7 @@ export default function PreferencesSection({
     <div>
       <header className="mb-8">
         <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-          Preferences
+          Preferences (Coming Soon)
         </h2>
         <p className="text-slate-500">Customize your experience and settings</p>
       </header>

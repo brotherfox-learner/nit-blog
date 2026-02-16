@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { User, LogOut, UserCircle, Shield, Home, FileText, Info, Bell } from "lucide-react";
+import { User, LogOut, Shield, Home, FileText, Info, Bell } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { notificationDummy } from "@/data/notificationDummy";
+import { useNotifications } from "@/hooks/useNotifications";
+import { formatDistanceToNow } from "@/lib/utils";
 /**
  * UserAvatar - Component สำหรับแสดง avatar และ dropdown menu
- * แสดงเมื่อ user login แล้ว
+ * แสดงเมื่อ user login แล้ว ใช้ข้อมูล notification จริงจาก API
  */
 export function UserAvatar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +14,14 @@ export function UserAvatar() {
   const dropdownRef = useRef(null);
   const { user, profile, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
-  
+  const { notifications, unreadCount, fetchUnreadCount } = useNotifications();
+
+  // Refresh unread count เมื่อเปิด dropdown
+  useEffect(() => {
+    if (isNotificationsOpen) {
+      fetchUnreadCount();
+    }
+  }, [isNotificationsOpen, fetchUnreadCount]);
 
   // Close dropdown เมื่อคลิกข้างนอก
   useEffect(() => {
@@ -46,18 +54,23 @@ export function UserAvatar() {
     return email ? email.charAt(0).toUpperCase() : "U";
   };
 
-  const notifications = Array.isArray(notificationDummy) ? notificationDummy : [];
-  const notificationCount = notifications.length;
-  const badgeText = notificationCount > 99 ? "99+" : String(notificationCount);
+  const recentNotifications = notifications.slice(0, 5);
+  const badgeText = unreadCount > 99 ? "99+" : String(unreadCount);
 
   const getNotificationText = (notification) => {
-    if (notification.type === "comment") {
-      return `${notification.user?.name || "Someone"} commented on: ${notification.articleTitle}`;
+    const actorName = notification.actor?.name || notification.actor?.username || "Someone";
+    switch (notification.type) {
+      case "comment":
+        return `${actorName} commented on: ${notification.post_title}`;
+      case "like":
+        return `${actorName} liked: ${notification.post_title}`;
+      case "new_post":
+        return `${actorName} published: ${notification.post_title}`;
+      case "post_update":
+        return `${actorName} updated: ${notification.post_title}`;
+      default:
+        return "New notification";
     }
-    if (notification.type === "like") {
-      return `${notification.user?.name || "Someone"} liked: ${notification.articleTitle}`;
-    }
-    return "New notification";
   };
 
   return (
@@ -72,11 +85,11 @@ export function UserAvatar() {
             setIsOpen(false);
           }}
           className="relative inline-flex items-center justify-center bg-transparent border-0 cursor-pointer p-2 text-[#666] transition-colors duration-300 hover:text-[#333]"
-          aria-label={`Notifications${notificationCount ? ` (${notificationCount})` : ""}`}
+          aria-label={`Notifications : ""}`}
           aria-expanded={isNotificationsOpen}
         >
           <Bell size={20} />
-          {notificationCount > 0 && (
+          {unreadCount > 0 && (
             <span className="absolute -top-0.5 -right-0.5 min-w-5 h-5 px-1 rounded-full bg-red-600 text-white text-[11px] leading-5 font-semibold text-center">
               {badgeText}
             </span>
@@ -95,21 +108,26 @@ export function UserAvatar() {
           <header className="bg-[#EFEEEB] px-4 py-3 border-b border-[#DAD6D1]/50">
             <p className="text-sm font-semibold text-[#26231E]">Notifications</p>
             <p className="text-xs text-[#75716B] mt-0.5">
-              {notificationCount ? `${notificationCount} new` : "No new notifications"}
+              {unreadCount > 0 ? `${unreadCount} unread` : "No new notifications"}
             </p>
           </header>
 
           <ul className="max-h-72 overflow-y-auto">
-            {notifications.length === 0 ? (
+            {recentNotifications.length === 0 ? (
               <li className="px-4 py-4 text-sm text-[#75716B]">No notifications</li>
             ) : (
-              notifications.map((n) => (
-                <li key={n.id} className="px-4 py-3 border-b border-[#DAD6D1]/30 last:border-b-0">
+              recentNotifications.map((n) => (
+                <li
+                  key={n.id}
+                  className={`px-4 py-3 border-b border-[#DAD6D1]/30 last:border-b-0 ${
+                    !n.is_read ? "bg-orange-50/40" : ""
+                  }`}
+                >
                   <p className="text-sm text-[#26231E] line-clamp-2">
                     {getNotificationText(n)}
                   </p>
-                  {n.timestamp && (
-                    <p className="text-xs text-[#75716B] mt-1">{n.timestamp}</p>
+                  {n.created_at && (
+                    <p className="text-xs text-[#75716B] mt-1">{formatDistanceToNow(n.created_at)}</p>
                   )}
                 </li>
               ))
@@ -118,7 +136,7 @@ export function UserAvatar() {
 
           <footer className="px-4 py-3 border-t border-[#DAD6D1]/50 bg-white">
             <Link
-              to={isAdmin() ? "/admin" : "/member"}
+              to="/member?tab=notifications"
               className="text-sm font-medium text-[#26231E] hover:underline"
               onClick={() => setIsNotificationsOpen(false)}
             >

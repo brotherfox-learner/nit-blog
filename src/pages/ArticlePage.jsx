@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { NavBar, Footer } from "../components/layout";
 import ArticleContent from "../components/article-page/ArticleContent";
 import CommentSection from "../components/article-page/CommentSection";
@@ -8,6 +8,7 @@ import defaultAvatar from "../assets/images/Author-main-pic.jpg";
 import LoginAlertDialog from "../components/article-page/components/LoginAlertDialog";
 import LoadingPage from "../components/common/LoadingPage";
 import { likePost, unlikePost, getLikesByPostId, checkUserLiked } from "../api/likesAPI";
+import { recordPostView } from "../api/statisticsAPI";
 
 export default function ArticlePage() {
   const { postId } = useParams();
@@ -17,6 +18,35 @@ export default function ArticlePage() {
 
   const [likeCount, setLikeCount] = useState(0);
   const [hasLiked, setHasLiked] = useState(false);
+
+  // Reading time tracking
+  const startTimeRef = useRef(null);
+  const sentRef = useRef(false);
+
+  useEffect(() => {
+    if (!postId || isLoading) return;
+    startTimeRef.current = Date.now();
+    sentRef.current = false;
+
+    const sendReadingTime = () => {
+      if (sentRef.current || !startTimeRef.current) return;
+      sentRef.current = true;
+      const seconds = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      if (seconds < 3) return;
+      recordPostView(
+        { post_id: parseInt(postId, 10), reading_time_seconds: seconds },
+        accessToken || null
+      ).catch(() => {});
+    };
+
+    const handleBeforeUnload = () => sendReadingTime();
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      sendReadingTime();
+    };
+  }, [postId, isLoading, accessToken]);
 
   useEffect(() => {
     if (!postId) return;

@@ -37,3 +37,5 @@ export { useArticleForm } from './useArticleForm.jsx';
 export { useCategoryForm } from './useCategoryForm.jsx';
 export { useProfileForm } from './useProfileForm.jsx';
 export { usePasswordReset } from './usePasswordReset.jsx';
+export { useNotifications } from './useNotifications.jsx';
+export { useStatistics } from './useStatistics.jsx';

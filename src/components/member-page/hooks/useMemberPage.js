@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../../lib/supabase';
-import { notificationDummy, activityStatsData } from '../data/notificationData';
-import { calculatePasswordStrength, withTimeout } from '../utils/helpers';
+import { useSearchParams } from 'react-router-dom';
 
 export const useMemberPage = (user, profile) => {
-  const [activeTab, setActiveTab] = useState('profile');
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'profile';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [profileImage, setProfileImage] = useState(null);
-  const [notifications, setNotifications] = useState(notificationDummy);
   const [showPassword, setShowPassword] = useState({
     current: false,
     new: false,
@@ -47,16 +46,11 @@ export const useMemberPage = (user, profile) => {
     setProfileImage(profile?.profile_pic ?? null);
   }, [profile]);
 
-  const activityStats = activityStatsData;
-  const unreadCount = notifications.filter(n => !n.read).length;
-
   return {
     activeTab,
     setActiveTab,
     profileImage,
     setProfileImage,
-    notifications,
-    setNotifications,
     showPassword,
     setShowPassword,
     saveStatus,
@@ -69,7 +63,5 @@ export const useMemberPage = (user, profile) => {
     setFormError,
     passwordData,
     setPasswordData,
-    activityStats,
-    unreadCount
   };
 };

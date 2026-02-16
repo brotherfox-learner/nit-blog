@@ -1,4 +1,4 @@
-import { User, Activity, Bell, Settings, Key, Shield } from 'lucide-react';
+import { User, Activity, Bell, Settings, Key } from 'lucide-react';
 
 export default function Sidebar({
   activeTab,
@@ -12,7 +12,7 @@ export default function Sidebar({
     { id: 'profile', icon: User, label: 'Profile Settings', emoji: '👤' },
     { id: 'activity', icon: Activity, label: 'Activity & Stats', emoji: '📊' },
     { id: 'notifications', icon: Bell, label: 'Notifications', emoji: '🔔' },
-    { id: 'preferences', icon: Settings, label: 'Preferences', emoji: '⚙️' },
+    { id: 'preferences', icon: Settings, label: 'Preferences (Coming Soon)', emoji: '⚙️' },
     { id: 'security', icon: Key, label: 'Security', emoji: '🔐' }
   ];
 
@@ -68,34 +68,31 @@ export default function Sidebar({
       </nav>
 
       <section className="px-6">
-        <article className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-4 border border-indigo-100 mb-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Shield size={16} className="text-indigo-600" />
-            <span className="text-sm font-semibold text-slate-700">Account Security</span>
-          </div>
-          <div className="flex items-center justify-between text-xs text-slate-600 mb-1">
-            <span>Password strength:</span>
-            <span className="font-semibold text-green-600">Strong</span>
-          </div>
-          <div className="flex items-center justify-between text-xs text-slate-600">
-            <span>2FA:</span>
-            <span className="font-semibold text-slate-400">Not enabled</span>
-          </div>
-        </article>
-
         <article className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
           <div className="flex items-center gap-2 mb-3">
             <Activity size={16} className="text-purple-600" />
             <span className="text-sm font-semibold text-slate-700">Quick Stats</span>
           </div>
           <div className="space-y-2">
+            {activityStats.role === 'admin' && (
+              <>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-600">Posts</span>
+                  <span className="font-bold text-purple-600">{activityStats.postsCount}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-600">Total Likes</span>
+                  <span className="font-bold text-purple-600">{(activityStats.likesCount ?? 0).toLocaleString()}</span>
+                </div>
+              </>
+            )}
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-600">Posts</span>
-              <span className="font-bold text-purple-600">{activityStats.postsCount}</span>
+              <span className="text-slate-600">Comments</span>
+              <span className="font-bold text-purple-600">{activityStats.commentsCount}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-600">Total Likes</span>
-              <span className="font-bold text-purple-600">{activityStats.likesCount.toLocaleString()}</span>
+              <span className="text-slate-600">Reading Time</span>
+              <span className="font-bold text-purple-600">{activityStats.totalReadingTime}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className="text-slate-600">Last Active</span>
