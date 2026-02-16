@@ -63,10 +63,12 @@ export function useNotifications() {
         prev.map((n) => (n.id === id ? { ...n, is_read: true, read_at: new Date().toISOString() } : n))
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
+      // Refetch เพื่อให้แน่ใจว่า sync กับ server
+      await fetchUnreadCount();
     } catch (err) {
       console.error("Failed to mark as read:", err);
     }
-  }, [token]);
+  }, [token, fetchUnreadCount]);
 
   // mark all as read
   const handleMarkAllAsRead = useCallback(async () => {
@@ -77,10 +79,12 @@ export function useNotifications() {
         prev.map((n) => ({ ...n, is_read: true, read_at: new Date().toISOString() }))
       );
       setUnreadCount(0);
+      // Refetch เพื่อให้แน่ใจว่า sync กับ server
+      await fetchUnreadCount();
     } catch (err) {
       console.error("Failed to mark all as read:", err);
     }
-  }, [token]);
+  }, [token, fetchUnreadCount]);
 
   // delete
   const handleDeleteNotification = useCallback(async (id) => {

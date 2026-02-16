@@ -153,9 +153,17 @@ export function UserAvatar() {
         aria-expanded={isOpen}
       >
         {/* Avatar Circle */}
-        <div className="w-9 h-9 rounded-full bg-[#26231E] text-white flex items-center justify-center font-semibold text-sm">
-          {getInitials(user.email)}
-        </div>
+        {profile?.profile_pic ? (
+          <img
+            src={profile.profile_pic}
+            alt={profile.name || user.email}
+            className="w-9 h-9 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-9 h-9 rounded-full bg-[#26231E] text-white flex items-center justify-center font-semibold text-sm">
+            {getInitials(user.email)}
+          </div>
+        )}
 
         {/* User Email (hidden on small screens) */}
         <span className="text-sm font-medium text-[#26231E] max-w-[120px] truncate hidden md:block">
@@ -244,7 +252,7 @@ export function UserAvatar() {
             </Link>
             {/* About Link */}
             <Link
-              to="/"
+              to="/about"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
               onClick={() => setIsOpen(false)}
             >

@@ -7,7 +7,7 @@ import { User, LogOut, UserCircle, Shield, Home, FileText, Info } from "lucide-r
 
 export default function HamburgerBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isLoggedIn, user, logout, isAdmin } = useAuth();
+  const { isLoggedIn, user, profile, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -76,16 +76,24 @@ export default function HamburgerBar() {
           <div className="bg-[#EFEEEB] px-5 py-4 border-b border-[#DAD6D1]/50">
             <div className="flex items-center gap-3">
               {/* Avatar */}
-              <div className="w-12 h-12 rounded-full bg-[#26231E] text-white flex items-center justify-center font-semibold">
-                {getInitials(user?.email)}
-              </div>
+              {profile?.profile_pic ? (
+                <img
+                  src={profile.profile_pic}
+                  alt={profile.name || user?.email}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-[#26231E] text-white flex items-center justify-center font-semibold">
+                  {getInitials(user?.email)}
+                </div>
+              )}
               {/* User Info */}
               <div className="flex-1 min-w-0">
                 <p className="text-[#26231E] font-semibold text-sm truncate">
                   {user?.email}
                 </p>
                 <p className="text-[#75716B] text-xs mt-0.5 capitalize">
-                  {user?.role} account
+                  {profile?.role || user?.role || "user"} account
                 </p>
               </div>
             </div>
@@ -179,7 +187,7 @@ export default function HamburgerBar() {
             </Link>
             {/* About Link */}
             <Link
-              to="/"
+              to="/about"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#43403B] hover:bg-[#EFEEEB] hover:text-[#26231E] transition-all duration-200"
               onClick={closeMenu}
             >

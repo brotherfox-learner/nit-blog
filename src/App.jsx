@@ -10,6 +10,7 @@ import AdminPage from "./pages/AdminPage";
 import { AdminRoute, MemberRoute } from "./components/common";
 import ScrollToHash from "./components/common/ScrollToHash";
 import HealthPage from "./pages/HealthPage";
+import AboutPage from "./pages/AboutPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/health" element={<HealthPage />} />
         <Route path="/article" element={<ArticlePage />} />
         <Route path="/article/:postId" element={<ArticlePage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<LogInPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         {/* Protected Routes - ต้อง login และมี role ที่ถูกต้อง */}
