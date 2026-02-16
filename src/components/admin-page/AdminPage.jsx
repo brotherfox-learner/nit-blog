@@ -26,6 +26,7 @@ export function AdminPage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0); // Used to trigger re-fetch
 
   const refreshData = useCallback(() => {
@@ -75,8 +76,8 @@ export function AdminPage() {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!itemToDelete || !accessToken) return;
-
+    if (!itemToDelete || !accessToken || isDeleting) return;
+    setIsDeleting(true);
     try {
       if (itemToDelete.type === "article") {
         await deletePost(itemToDelete.data.id, accessToken);
@@ -95,6 +96,8 @@ export function AdminPage() {
     } catch (err) {
       console.error("Delete failed:", err);
       alert("Delete failed: " + (err.response?.data?.message || err.message));
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -188,6 +191,7 @@ export function AdminPage() {
         }
         confirmLabel="Delete"
         variant="destructive"
+        confirmLoading={isDeleting}
       />
     </div>
   );

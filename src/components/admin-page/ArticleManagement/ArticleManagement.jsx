@@ -32,6 +32,7 @@ export function ArticleManagement({ onEdit, onCreate }) {
   const [isLoading, setIsLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch articles and categories from API
   useEffect(() => {
@@ -89,16 +90,18 @@ export function ArticleManagement({ onEdit, onCreate }) {
   };
 
   const handleDeleteConfirm = async () => {
-    if (articleToDelete && accessToken) {
-      try {
-        await deletePost(articleToDelete.id, accessToken);
-        setArticles((prev) => prev.filter((a) => a.id !== articleToDelete.id));
-        setDeleteDialogOpen(false);
-        setArticleToDelete(null);
-      } catch (err) {
-        console.error("Failed to delete article:", err);
-        alert("Failed to delete article: " + (err.response?.data?.message || err.message));
-      }
+    if (!articleToDelete || !accessToken || isDeleting) return;
+    setIsDeleting(true);
+    try {
+      await deletePost(articleToDelete.id, accessToken);
+      setArticles((prev) => prev.filter((a) => a.id !== articleToDelete.id));
+      setDeleteDialogOpen(false);
+      setArticleToDelete(null);
+    } catch (err) {
+      console.error("Failed to delete article:", err);
+      alert("Failed to delete article: " + (err.response?.data?.message || err.message));
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -189,6 +192,7 @@ export function ArticleManagement({ onEdit, onCreate }) {
         message="Do you want to delete this article?"
         confirmLabel="Delete"
         variant="destructive"
+        confirmLoading={isDeleting}
       />
     </div>
   );
