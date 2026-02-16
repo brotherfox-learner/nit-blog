@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { NavBar } from "../components/layout";
 import { useFormStyles } from "../hooks";
@@ -9,6 +10,7 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState("");
   const { signUp } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -38,8 +40,8 @@ export default function SignUpPage() {
       return;
     }
 
-    // signUp สำเร็จ + profile ถูกสร้างแล้ว
-    // redirect หรือแสดง success ตามต้องการ
+    // signUp สำเร็จ → redirect ไปหน้าแรก
+    navigate("/");
   };
 
   return (
