@@ -14,7 +14,7 @@ import AboutPage from "./pages/AboutPage";
 
 function App() {
   return (
-    <div className="w-full max-w-full overflow-x-hidden">
+    <div className="w-full max-w-full overflow-x-clip">
       <ScrollToHash />
       <Routes>
         <Route path="/" element={<LandingPage />} />

@@ -156,7 +156,7 @@ export function UserAvatar() {
         {profile?.profile_pic ? (
           <img
             src={profile.profile_pic}
-            alt={profile.name || user.email}
+            alt={profile.name || user.name}
             className="w-9 h-9 rounded-full object-cover"
           />
         ) : (
@@ -165,9 +165,9 @@ export function UserAvatar() {
           </div>
         )}
 
-        {/* User Email (hidden on small screens) */}
+        {/* User Name (hidden on small screens) */}
         <span className="text-sm font-medium text-[#26231E] max-w-[120px] truncate hidden md:block">
-          {user.email.split("@")[0]}
+          {profile?.name || user.name}
         </span>
 
         {/* Dropdown Arrow */}

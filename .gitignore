@@ -54,3 +54,5 @@ out
 Thumbs.db
 .DS_Store
 
+#md
+CODE_DOCUMENTATION.md

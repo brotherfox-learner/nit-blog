@@ -1,6 +1,6 @@
 export default function AuthorCard({ author, bio }) {
   return (
-    <aside className="max-lg:flex max-lg:flex-col max-lg:justify-center max-lg:items-center lg:w-[370px] xl:w-[400px] lg:flex-shrink-0">
+    <aside className="max-lg:flex max-lg:flex-col max-lg:justify-center max-lg:items-center lg:w-[370px] xl:w-[400px] lg:flex-shrink-0 lg:self-stretch lg:mt-3">
       <div className="w-full max-w-[343px] lg:max-w-none px-4 md:px-6 my-5 lg:my-0 lg:sticky top-[20px]">
         <footer className="p-6 md:p-8 min-h-[376px] bg-[#EFEEEB] rounded-2xl">
           <section className="flex flex-col gap-6">
