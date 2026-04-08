@@ -10,26 +10,26 @@ export default function MobileTabs({ activeTab, setActiveTab, unreadCount }) {
   ];
 
   return (
-    <nav className="flex lg:hidden gap-0 px-4 mb-6 border-b border-slate-200 bg-white/90 backdrop-blur-lg overflow-x-auto">
+    <nav className="mx-4 mt-4 flex gap-1 overflow-x-auto rounded-2xl border border-neutral-200/90 bg-white p-1.5 text-neutral-600 shadow-sm sm:mx-5 lg:hidden">
       {tabs.map(({ id, icon: Icon, label, hasNotification }) => (
         <button
           key={id}
-          className={`flex items-center gap-2 px-4 py-4 sm:px-6 bg-transparent border-none text-sm sm:text-[0.95rem] cursor-pointer border-b-2 border-transparent transition-all duration-300 relative -bottom-px font-medium whitespace-nowrap ${
+          className={`relative flex items-center gap-2 whitespace-nowrap rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-200 sm:px-4 sm:text-[0.95rem] ${
             activeTab === id
-              ? 'text-indigo-600 border-b-indigo-600'
-              : 'text-slate-500 hover:text-slate-700'
+              ? 'bg-neutral-100 text-neutral-900'
+              : 'text-neutral-500 hover:bg-neutral-50 hover:text-neutral-800'
           }`}
           onClick={() => setActiveTab(id)}
         >
           <div className="relative">
-            <Icon size={20} className={activeTab === id ? 'opacity-100' : 'opacity-70'} />
+            <Icon size={18} className={activeTab === id ? 'opacity-100' : 'opacity-70'} />
             {hasNotification && unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-pink-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
+              <span className="absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-neutral-800 text-[9px] font-bold text-white">
                 {unreadCount}
               </span>
             )}
           </div>
-          <span className="hidden sm:inline">{label}</span>
+          <span>{label}</span>
         </button>
       ))}
     </nav>

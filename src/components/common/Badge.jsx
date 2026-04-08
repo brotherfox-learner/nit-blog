@@ -1,4 +1,13 @@
 import { cn } from "@/lib/utils";
+import { CATEGORIES, HIGHLIGHT_STYLE } from "@/constants/design";
+
+/** Same gradient + text as category filter (selected) and ArticleHero — keyed by API category name */
+const FILTER_TAG_COLORS_BY_VALUE = Object.fromEntries(
+  CATEGORIES.filter((c) => c.value !== "All").map((c) => [c.value, c.colors])
+);
+if (FILTER_TAG_COLORS_BY_VALUE.Technology) {
+  FILTER_TAG_COLORS_BY_VALUE.Cat = FILTER_TAG_COLORS_BY_VALUE.Technology;
+}
 
 const BADGE_VARIANTS = {
   category: {
@@ -29,7 +38,7 @@ const CATEGORY_COLORS = {
     hoverBg: "hover:bg-blue-500",
     shadow: "group-hover:shadow-[0_8px_25px_rgba(59,130,246,0.4)]",
   },
-  Cat: {
+  Technology: {
     text: "text-amber-600",
     border: "border-amber-200",
     bg: "bg-amber-50/95",

@@ -2,19 +2,79 @@ import { Activity, FileText, Heart, MessageCircle, Clock, BookOpen } from 'lucid
 
 export default function ActivitySection({ activityStats, isLoading }) {
   const isAdmin = activityStats.role === 'admin';
+  const statCards = [
+    ...(isAdmin
+      ? [
+          {
+            key: 'posts',
+            label: 'Total Posts',
+            value: activityStats.postsCount,
+            note: "Articles you've published",
+            icon: FileText,
+            tint: 'from-neutral-50 to-stone-50',
+            iconBg: 'bg-white',
+            iconColor: 'text-neutral-600',
+          },
+          {
+            key: 'likes',
+            label: 'Total Likes',
+            value: (activityStats.likesCount ?? 0).toLocaleString(),
+            note: 'Appreciation from readers',
+            icon: Heart,
+            tint: 'from-neutral-50 to-neutral-100/80',
+            iconBg: 'bg-white',
+            iconColor: 'text-neutral-600',
+          },
+        ]
+      : []),
+    {
+      key: 'comments',
+      label: isAdmin ? 'Comments on Posts' : 'My Comments',
+      value: activityStats.commentsCount,
+      note: isAdmin ? 'Conversations on your content' : "Comments you've written",
+      icon: MessageCircle,
+      tint: 'from-neutral-50 to-neutral-100/80',
+      iconBg: 'bg-white',
+      iconColor: 'text-neutral-600',
+    },
+    {
+      key: 'active',
+      label: 'Last Active',
+      value: activityStats.lastActive,
+      note: 'Your most recent activity',
+      icon: Clock,
+      tint: 'from-stone-50 to-neutral-100/60',
+      iconBg: 'bg-white',
+      iconColor: 'text-neutral-600',
+    },
+    {
+      key: 'reading',
+      label: 'Total Reading Time',
+      value: activityStats.totalReadingTime,
+      note: isAdmin ? 'Time readers spent on your content' : "Time you've spent reading articles",
+      icon: BookOpen,
+      tint: 'from-neutral-50 to-neutral-100/80',
+      iconBg: 'bg-white',
+      iconColor: 'text-neutral-600',
+      wide: !isAdmin,
+    },
+  ];
 
   if (isLoading) {
     return (
-      <div>
-        <header className="mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+      <div className="space-y-8">
+        <header className="border-b border-neutral-100 pb-5">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+            Insights
+          </p>
+          <h2 className="mb-2 text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">
             Activity &amp; Statistics
           </h2>
-          <p className="text-slate-500">Loading your stats...</p>
+          <p className="text-[0.95rem] leading-relaxed text-neutral-500">Loading your stats...</p>
         </header>
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-slate-100 rounded-2xl p-6 animate-pulse h-32" />
+            <div key={i} className="h-36 animate-pulse rounded-2xl bg-neutral-100" />
           ))}
         </section>
       </div>
@@ -22,131 +82,84 @@ export default function ActivitySection({ activityStats, isLoading }) {
   }
 
   return (
-    <div>
-      <header className="mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+    <div className="space-y-8">
+      <header className="border-b border-neutral-100 pb-5">
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+          Insights
+        </p>
+        <h2 className="mb-2 text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">
           Activity &amp; Statistics
         </h2>
-        <p className="text-slate-500">Track your engagement and activity over time</p>
+        <p className="max-w-2xl text-[0.98rem] leading-relaxed text-neutral-500">
+          A calmer readout of how your account is performing, from publishing to reader engagement and reading habits.
+        </p>
       </header>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        {/* Total Posts - admin only */}
-        {isAdmin && (
-          <article className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl p-6 border border-indigo-200 hover:shadow-lg transition-all duration-300">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                <FileText size={24} className="text-indigo-600" />
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {statCards.map(({ key, label, value, note, icon: Icon, tint, iconBg, iconColor, wide }) => (
+          <article
+            key={key}
+            className={`rounded-2xl border border-neutral-200/90 bg-gradient-to-br ${tint} p-5 shadow-sm transition-shadow duration-200 hover:shadow-md ${
+              wide ? 'sm:col-span-2 xl:col-span-1' : ''
+            }`}
+          >
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${iconBg}`}>
+                <Icon size={22} className={iconColor} />
               </div>
-              <span className="text-3xl font-bold text-indigo-600">{activityStats.postsCount}</span>
+              <span className={`text-right text-3xl font-bold tracking-tight ${iconColor}`}>{value}</span>
             </div>
-            <h3 className="text-sm font-semibold text-slate-700 mb-1">Total Posts</h3>
-            <p className="text-xs text-slate-500">Articles you've published</p>
+            <h3 className="mb-1 text-sm font-medium text-neutral-800">{label}</h3>
+            <p className="text-xs leading-relaxed text-neutral-500">{note}</p>
           </article>
-        )}
-
-        {/* Total Likes - admin only */}
-        {isAdmin && (
-          <article className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-2xl p-6 border border-pink-200 hover:shadow-lg transition-all duration-300">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                <Heart size={24} className="text-pink-600" />
-              </div>
-              <span className="text-3xl font-bold text-pink-600">{activityStats.likesCount.toLocaleString()}</span>
-            </div>
-            <h3 className="text-sm font-semibold text-slate-700 mb-1">Total Likes</h3>
-            <p className="text-xs text-slate-500">Appreciation from readers</p>
-          </article>
-        )}
-
-        {/* Total Comments - ทุก role */}
-        <article className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200 hover:shadow-lg transition-all duration-300">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
-              <MessageCircle size={24} className="text-purple-600" />
-            </div>
-            <span className="text-3xl font-bold text-purple-600">{activityStats.commentsCount}</span>
-          </div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-1">
-            {isAdmin ? 'Comments on Posts' : 'My Comments'}
-          </h3>
-          <p className="text-xs text-slate-500">
-            {isAdmin ? 'Conversations on your content' : 'Comments you\'ve written'}
-          </p>
-        </article>
-
-        {/* Last Active - ทุก role */}
-        <article className="bg-gradient-to-br from-violet-50 to-violet-100 rounded-2xl p-6 border border-violet-200 hover:shadow-lg transition-all duration-300">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
-              <Clock size={24} className="text-violet-600" />
-            </div>
-            <span className="text-xl font-bold text-violet-600">{activityStats.lastActive}</span>
-          </div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-1">Last Active</h3>
-          <p className="text-xs text-slate-500">Your most recent activity</p>
-        </article>
-
-        {/* Total Reading Time - ทุก role */}
-        <article className={`bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-6 border border-emerald-200 hover:shadow-lg transition-all duration-300 ${isAdmin ? 'sm:col-span-2 lg:col-span-1' : 'sm:col-span-2'}`}>
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
-              <BookOpen size={24} className="text-emerald-600" />
-            </div>
-            <span className="text-3xl font-bold text-emerald-600">{activityStats.totalReadingTime}</span>
-          </div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-1">Total Reading Time</h3>
-          <p className="text-xs text-slate-500">
-            {isAdmin ? 'Combined time readers spent on your content' : 'Time you\'ve spent reading articles'}
-          </p>
-        </article>
+        ))}
       </section>
 
-      <section className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border border-slate-200">
-        <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <Activity size={20} className="text-indigo-600" />
+      <section className="rounded-2xl border border-neutral-100 bg-neutral-50/80 p-6">
+        <h3 className="mb-6 flex items-center gap-2 text-lg font-semibold text-neutral-900">
+          <Activity size={20} className="text-neutral-500" />
           Summary
         </h3>
         <div className="space-y-4">
           {isAdmin ? (
             <>
-              <article className="flex items-start gap-4 pb-4 border-b border-slate-100">
-                <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center shrink-0">
-                  <FileText size={18} className="text-indigo-600" />
+              <article className="flex items-start gap-4 border-b border-neutral-100 pb-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-neutral-100">
+                  <FileText size={18} className="text-neutral-500" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-slate-800 mb-1">Published {activityStats.postsCount} posts</p>
-                  <p className="text-xs text-slate-500">with {activityStats.likesCount.toLocaleString()} total likes and {activityStats.commentsCount} comments</p>
+                  <p className="mb-1 text-sm font-medium text-neutral-900">Published {activityStats.postsCount} posts</p>
+                  <p className="text-xs leading-relaxed text-neutral-500">with {(activityStats.likesCount ?? 0).toLocaleString()} total likes and {activityStats.commentsCount} comments.</p>
                 </div>
               </article>
-              <article className="flex items-start gap-4 pb-4 border-b border-slate-100 last:border-0">
-                <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center shrink-0">
-                  <BookOpen size={18} className="text-emerald-600" />
+              <article className="flex items-start gap-4 pb-1">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-neutral-100">
+                  <BookOpen size={18} className="text-neutral-500" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-slate-800 mb-1">Readers spent {activityStats.totalReadingTime} on your content</p>
-                  <p className="text-xs text-slate-500">Keep writing to grow your audience!</p>
+                  <p className="mb-1 text-sm font-medium text-neutral-900">Readers spent {activityStats.totalReadingTime} on your content</p>
+                  <p className="text-xs leading-relaxed text-neutral-500">The strongest signal here is consistency. More useful articles usually compounds reach over time.</p>
                 </div>
               </article>
             </>
           ) : (
             <>
-              <article className="flex items-start gap-4 pb-4 border-b border-slate-100">
-                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center shrink-0">
-                  <MessageCircle size={18} className="text-purple-600" />
+              <article className="flex items-start gap-4 border-b border-neutral-100 pb-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-neutral-100">
+                  <MessageCircle size={18} className="text-neutral-500" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-slate-800 mb-1">You've written {activityStats.commentsCount} comments</p>
-                  <p className="text-xs text-slate-500">Share your thoughts on more articles!</p>
+                  <p className="mb-1 text-sm font-medium text-neutral-900">You've written {activityStats.commentsCount} comments</p>
+                  <p className="text-xs leading-relaxed text-neutral-500">Your activity is building a visible reading footprint across the blog.</p>
                 </div>
               </article>
-              <article className="flex items-start gap-4 pb-4 border-b border-slate-100 last:border-0">
-                <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center shrink-0">
-                  <BookOpen size={18} className="text-emerald-600" />
+              <article className="flex items-start gap-4 pb-1">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-neutral-100">
+                  <BookOpen size={18} className="text-neutral-500" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-slate-800 mb-1">You've spent {activityStats.totalReadingTime} reading</p>
-                  <p className="text-xs text-slate-500">Keep exploring new articles!</p>
+                  <p className="mb-1 text-sm font-medium text-neutral-900">You've spent {activityStats.totalReadingTime} reading</p>
+                  <p className="text-xs leading-relaxed text-neutral-500">Keep exploring fresh posts to make this feed feel more personal over time.</p>
                 </div>
               </article>
             </>

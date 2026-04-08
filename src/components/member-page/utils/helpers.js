@@ -7,6 +7,17 @@ export const getInitials = (name) => {
     .toUpperCase();
 };
 
+/** Single visible character for avatar fallback (name → username → ?). */
+export const getProfileFallbackLetter = (name, username) => {
+  const firstChar = (value) => {
+    const t = value != null ? String(value).trim() : '';
+    if (!t) return '';
+    const ch = Array.from(t)[0];
+    return ch ? ch.toLocaleUpperCase() : '';
+  };
+  return firstChar(name) || firstChar(username) || '';
+};
+
 // Helper function to calculate password strength
 export const calculatePasswordStrength = (password) => {
   let strength = 0;

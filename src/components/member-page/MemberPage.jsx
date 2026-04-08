@@ -2,7 +2,6 @@ import Header from '../layout/NavBar';
 import { useAuth } from "../../contexts/AuthContext";
 import { updateUser, changePassword } from "@/api/usersAPI";
 
-// Components
 import Sidebar from './components/Sidebar';
 import MobileTabs from './components/MobileTabs';
 import ProfileSection from './components/ProfileSection';
@@ -11,7 +10,6 @@ import NotificationsSection from './components/NotificationsSection';
 import PreferencesSection from './components/PreferencesSection';
 import SecuritySection from './components/SecuritySection';
 
-// Hooks and utilities
 import { useMemberPage } from './hooks/useMemberPage';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useStatistics } from '@/hooks/useStatistics';
@@ -19,8 +17,7 @@ import { calculatePasswordStrength, getPasswordStrengthColor, getPasswordStrengt
 
 export default function MemberPageComponent() {
   const { user, profile, token, fetchProfile } = useAuth();
-  
-  // Notifications (real data from API)
+
   const {
     notifications,
     unreadCount,
@@ -30,10 +27,8 @@ export default function MemberPageComponent() {
     handleDeleteNotification,
   } = useNotifications();
 
-  // Statistics (real data from API)
   const { activityStats, isLoading: isLoadingStats } = useStatistics();
 
-  // Use custom hook for state management
   const {
     activeTab,
     setActiveTab,
@@ -53,7 +48,6 @@ export default function MemberPageComponent() {
     setPasswordData,
   } = useMemberPage(user, profile);
 
-  // Handler functions
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -65,7 +59,6 @@ export default function MemberPageComponent() {
     }
   };
 
-  // ฟังก์ชันการจัดการการเปลี่ยนแปลงข้อมูลการกรอก
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -74,7 +67,6 @@ export default function MemberPageComponent() {
     }));
   };
 
-  // ฟังก์ชันการจัดการการเปลี่ยนแปลงข้อมูลการกรอกรหัสผ่าน
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordData(prev => ({
@@ -87,7 +79,6 @@ export default function MemberPageComponent() {
     }
   };
 
-  // ฟังก์ชันการจัดการการเปลี่ยนแปลงข้อมูลการกรอกรหัสผ่าน
   const togglePasswordVisibility = (field) => {
     setShowPassword(prev => ({
       ...prev,
@@ -95,20 +86,18 @@ export default function MemberPageComponent() {
     }));
   };
 
-  // ฟังก์ชันการจัดการการบันทึกข้อมูล
   const handleSave = async () => {
     if (!token || !user) {
       setFormError("You must be logged in to save changes.");
       return;
     }
-    
-    // Client-side validation ก่อนส่ง
+
     const trimmedUsername = formData.username ? String(formData.username).trim() : "";
     if (!trimmedUsername || trimmedUsername.length === 0) {
       setFormError("Username cannot be empty.");
       return;
     }
-    
+
     setSaveStatus("saving");
     setFormError(null);
 
@@ -130,9 +119,9 @@ export default function MemberPageComponent() {
       console.error("Save profile error:", err);
       console.error("Response data:", err.response?.data);
       console.error("Response status:", err.response?.status);
-      
+
       let message = "Unable to save changes. Please try again.";
-      
+
       if (err.response?.data) {
         const data = err.response.data;
         if (Array.isArray(data.errors) && data.errors.length > 0) {
@@ -145,15 +134,13 @@ export default function MemberPageComponent() {
       } else if (err.message) {
         message = err.message;
       }
-      
+
       setFormError(message);
       setSaveStatus(null);
     }
   };
 
-  // ฟังก์ชันการจัดการการเปลี่ยนแปลงรหัสผ่าน
   const handleChangePassword = async () => {
-    // Client-side validation
     if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
       setFormError("Please fill in all password fields.");
       return;
@@ -178,9 +165,9 @@ export default function MemberPageComponent() {
       setTimeout(() => setSaveStatus(null), 2000);
     } catch (err) {
       console.error("Change password error:", err);
-      
+
       let message = "Unable to change password. Please try again.";
-      
+
       if (err.response?.data) {
         const data = err.response.data;
         if (Array.isArray(data.errors) && data.errors.length > 0) {
@@ -193,17 +180,18 @@ export default function MemberPageComponent() {
       } else if (err.message) {
         message = err.message;
       }
-      
+
       setFormError(message);
       setSaveStatus(null);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-100">
+    <div className="relative min-h-screen overflow-hidden bg-neutral-50 text-neutral-800">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,#ffffff_0%,#fafafa_40%,#f5f5f5_100%)]" />
       <Header />
 
-      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-60px)] lg:min-h-[calc(100vh-73px)]">
+      <div className="relative mx-auto flex min-h-[calc(100vh-60px)] max-w-[1440px] flex-col px-0 pb-8 lg:min-h-[calc(100vh-73px)] lg:flex-row lg:px-6 lg:pb-10">
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -219,8 +207,8 @@ export default function MemberPageComponent() {
           unreadCount={unreadCount}
         />
 
-        <main className="flex-1 px-0 pb-0 lg:px-8 lg:py-8">
-          <div className="bg-white/95 backdrop-blur-sm rounded-none lg:rounded-2xl p-6 sm:p-8 lg:p-10 lg:max-w-[65vw] shadow-none lg:shadow-xl lg:border lg:border-slate-100">
+        <main className="flex-1 px-4 pb-6 pt-3 sm:px-5 lg:px-8 lg:py-8">
+          <div className="min-h-full overflow-hidden rounded-2xl border border-neutral-200/90 bg-white p-5 shadow-sm sm:p-7 lg:rounded-3xl lg:p-10">
             {activeTab === 'profile' && (
               <ProfileSection
                 formData={formData}
